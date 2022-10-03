@@ -614,6 +614,7 @@ export const checkClaimMatch = (
     let finalItem = "";
     let modifiedItem;
     let isFind;
+    let shouldLookupDB = false;
 
     // Test
     // if (claim.num === 1 && /^撥針舌/.test(followContent)) {
@@ -885,6 +886,7 @@ else if (
     // item = itemPrefix + itemBody;
 
     if (!finalItem) {
+      shouldLookupDB = true;
       // Test
       // if (item.startsWith("控制模組電性")) {
       //   console.log(item);
@@ -1167,7 +1169,9 @@ else if (
       // pathIsOK: false,
       realStart,
       // isInDescriptionOfElementMap: doubleModifiedItem ? true : false
-      isInDescriptionOfElementMap: false
+      isInDescriptionOfElementMap: false,
+      shouldLookupDB,
+      followContent
     });
   }); // each 剩下的「該」後面接沒有在符號說明的元件
 

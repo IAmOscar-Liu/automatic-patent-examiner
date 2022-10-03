@@ -1,5 +1,107 @@
 import { stringToUnicode } from "./stringToUnicode";
 
+const fetchResultFromDB = async (followContentMap) => {
+  try {
+    const res = await fetch(process.env.REACT_APP_SERVER_URL, {
+      method: "POST",
+      body: JSON.stringify({ followContents: Object.keys(followContentMap) }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      }
+    });
+
+    const json = await res.json();
+
+    return json.dbResultMap || {};
+  } catch (error) {
+    window.alert(
+      "無法連線到資料庫，請檢查您的網路連線，且不要再本機上使用此功能"
+    );
+    return {};
+  }
+};
+
+export const lookupDB = async (claims, useDatabase, _dbResultMap) => {
+  const followContentMap = {};
+
+  for (let claimIdx = 0; claimIdx < claims.length; claimIdx++) {
+    // m.isInDescriptionOfElementMap === false && !m.shouldLookupDB
+    for (
+      let matchIdx = 0;
+      matchIdx < claims[claimIdx].matches.length;
+      matchIdx++
+    ) {
+      const match = claims[claimIdx].matches[matchIdx];
+
+      if (match.isInDescriptionOfElementMap) continue;
+      if (match.isInDescriptionOfElementMap === false && !match.shouldLookupDB)
+        continue;
+      if (
+        match.isInDescriptionOfElementMap === false &&
+        match.shouldLookupDB &&
+        !useDatabase
+      ) {
+        match.shouldLookupDB = false;
+        continue;
+      }
+      if (!match.followContent) continue;
+
+      if (followContentMap[match.followContent] === undefined) {
+        followContentMap[match.followContent] = {
+          addresses: [{ claimIdx, matchIdx }]
+        };
+      } else {
+        followContentMap[match.followContent].addresses.push({
+          claimIdx,
+          matchIdx
+        });
+      }
+    }
+  }
+
+  if (Object.keys(followContentMap).length === 0) return;
+
+  const dbResultMap = await fetchResultFromDB(followContentMap);
+
+  // console.log("followContentMap", followContentMap);
+  // console.log("dbResultMap", dbResultMap);
+
+  Object.entries(followContentMap).forEach(([key, value]) => {
+    const dbValue = dbResultMap[key];
+    _dbResultMap[key] = { dbValue: dbValue || "無結果", claims: new Set() };
+
+    for (let address of value.addresses) {
+      const { claimIdx, matchIdx } = address;
+      _dbResultMap[key].claims.add(claimIdx + 1);
+
+      if (dbValue) {
+        claims[claimIdx].matches[matchIdx].group = stringToUnicode(dbValue);
+        claims[claimIdx].matches[matchIdx].item = dbValue;
+        claims[claimIdx].matches[matchIdx].value = dbValue;
+        claims[claimIdx].matches[matchIdx].end =
+          claims[claimIdx].matches[matchIdx].start + dbValue.length;
+      } else {
+        claims[claimIdx].matches[matchIdx].shouldLookupDB = false;
+      }
+    }
+
+    _dbResultMap[key].claims = Array.from(_dbResultMap[key].claims).sort(
+      (a, b) => a - b
+    );
+  });
+
+  console.log("dbResultMap", _dbResultMap);
+
+  // debugger;
+
+  /*
+      group: stringToUnicode(optimalValue),
+      item: optimalValue,
+      value: optimalValue,
+      end: mm.start + optimalValue.length
+  */
+};
+
 export const optimizeClaimMatch = (claims) => {
   const claimGroup = [];
   const groupMatchesSortedByLength = [];
@@ -19,6 +121,8 @@ export const optimizeClaimMatch = (claims) => {
   debugger;
   */
 
+  //  shouldLookupDB, followContent,
+
   claims.forEach((claim, claimIdx) => {
     if (
       claimIdx === 0 ||
@@ -28,12 +132,14 @@ export const optimizeClaimMatch = (claims) => {
       claimGroup.push({
         baseClaimIdx: claimIdx,
         groupMatches: claim.matches.filter(
-          (m) => m.isInDescriptionOfElementMap === false
+          (m) => m.isInDescriptionOfElementMap === false && !m.shouldLookupDB
         )
       });
     } else {
       claimGroup[claimGroup.length - 1].groupMatches.push(
-        ...claim.matches.filter((m) => m.isInDescriptionOfElementMap === false)
+        ...claim.matches.filter(
+          (m) => m.isInDescriptionOfElementMap === false && !m.shouldLookupDB
+        )
       );
     }
   });
@@ -95,6 +201,7 @@ export const optimizeClaimMatch = (claims) => {
             claim.matches = claim.matches.map((mm) => {
               if (
                 mm.isInDescriptionOfElementMap === false &&
+                !mm.shouldLookupDB &&
                 mm.value === value
               ) {
                 return {

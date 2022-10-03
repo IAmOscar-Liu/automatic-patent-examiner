@@ -2,7 +2,7 @@ import React, { createContext, useState } from "react";
 
 export const EssentialDataContextProvider = createContext();
 
-const EssentialDataContext = ({ children }) => {
+const EssentialDataContext = ({ children, personalSettings }) => {
   const [essentialData, setEssentialData] = useState({
     isProcessing: false,
     pathName: "",
@@ -34,7 +34,11 @@ const EssentialDataContext = ({ children }) => {
       isDarkMode: false,
       fontSize: 2,
       openTooltip: true,
-      showClaimElementKey: true
+      showClaimElementKey: true,
+      synchronizeHighlight: false,
+      readingModePureText: false,
+      useDatabase: false,
+      ...personalSettings
     },
     searchString: "",
     allErrors: {
@@ -52,8 +56,7 @@ const EssentialDataContext = ({ children }) => {
     },
     globalHighlightOn: true,
     globalHighlightElement: [],
-    synchronizeHighlight: false,
-    readingModePureText: false
+    dbResultMap: {}
   });
 
   return (

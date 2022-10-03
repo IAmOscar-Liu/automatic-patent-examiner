@@ -247,8 +247,8 @@ const Disclosure = ({ handleReInit }) => {
                 ) && (
                   <>
                     <button
-                      onClick={() => {
-                        handleReInit(essentialData, setEssentialData, {
+                      onClick={async () => {
+                        await handleReInit(essentialData, setEssentialData, {
                           method: "allDisclosureParagraphDetails",
                           data: allUpdateParagraph
                         });

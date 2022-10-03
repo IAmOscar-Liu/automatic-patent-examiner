@@ -196,7 +196,10 @@ const Dashboard = () => {
             <div className="dashboard-section-btns-bottom">
               <button
                 disabled={
-                  savedFileContent.textAreaValue.length === 0 ? true : ""
+                  savedFileContent.textAreaValue.length === 0 ||
+                  essentialData.isProcessing
+                    ? true
+                    : ""
                 }
                 onClick={() => {
                   setSavedFileContent((prev) => ({

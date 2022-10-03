@@ -5,7 +5,7 @@ import { modifyAllParagraph } from "../utils/modifyAllParagraph";
 import { modifyAllClaims } from "../utils/modifyAllClaims";
 import { generateErrorExp } from "../utils/generateErrorExp";
 
-export const reInit = (_essentialData, setEssentialData, payload) => {
+export const reInit = async (_essentialData, setEssentialData, payload) => {
   /*
     payload: {method, data}
   */
@@ -16,7 +16,8 @@ export const reInit = (_essentialData, setEssentialData, payload) => {
     ...prev,
     isProcessing: true,
     globalHighlightOn: true,
-    globalHighlightElement: []
+    globalHighlightElement: [],
+    dbResultMap: {}
   }));
 
   const copyOfDisclosurePara = _essentialData.allDisclosureParagraphDetails;
@@ -191,7 +192,7 @@ export const reInit = (_essentialData, setEssentialData, payload) => {
   let newClaimPayload = [];
   let manuallyAddValues = [...essentialData.preserveValues];
   if (payload.method !== "allClaimsDetails") {
-    modifyAllClaims(null, -1, essentialData, copyOfClaimDetails, []);
+    await modifyAllClaims(null, -1, essentialData, copyOfClaimDetails, []);
   } else {
     newClaimPayload = payload.data.map((payload, payloadIdx) => {
       if (
@@ -224,7 +225,7 @@ export const reInit = (_essentialData, setEssentialData, payload) => {
     // console.log(manuallyAddValues);
     // debugger;
     // modifyAllClaims(null, payload.data, essentialData, copyOfClaimDetails);
-    modifyAllClaims(
+    await modifyAllClaims(
       null,
       newClaimPayload,
       essentialData,

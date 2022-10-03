@@ -294,7 +294,7 @@ export const generateErrorExp = (essentialData) => {
 
         try {
           if (
-            /本請求項所依附之請求項[0-9]+為多項附屬項[直間]接依附多項附屬項，該依附之請求項先暫且略過/.test(
+            /^本請求項所依附之請求項[0-9]+為多項附屬項[直間]接依附多項附屬項/.test(
               message
             )
           ) {

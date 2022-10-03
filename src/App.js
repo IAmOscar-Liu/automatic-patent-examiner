@@ -25,9 +25,10 @@ import { reInit } from "./hooks/reInit";
 import SettingImg from "./assets/setting.png";
 import Popup from "reactjs-popup";
 import SettingsPopup from "./components/SettingsPopup";
+import DBResultPopup from "./components/DbResultPopup";
 import { getPathName } from "./utils/getPathName";
 
-export default function App() {
+export default function App({ setLocalStorageValue }) {
   const [XMLData, setXMLData] = useContext(XMLContextProvider);
   const [essentialData, setEssentialData] = useContext(
     EssentialDataContextProvider
@@ -40,12 +41,13 @@ export default function App() {
   } = useContext(UpdateParagraphContextProvider);
 
   const [isSettingPopupOpen, toggleIsSettingPopupOpen] = useState(false);
+  const [isDBResultPopupOpen, toggleIsDBResultPopupOpen] = useState(false);
 
-  const handleReInit = (_essentialData, _setEssentialData, _payload) => {
+  const handleReInit = async (_essentialData, _setEssentialData, _payload) => {
     setAllUpdateDisclosureParagraph([]);
     setAllUpdateModeForInventionParagraph([]);
     setAllUpdateClaimParagraph([]);
-    reInit(_essentialData, _setEssentialData, _payload);
+    await reInit(_essentialData, _setEssentialData, _payload);
   };
 
   useLoadXML(XMLData.fileName, XMLData.fileContent, setXMLData);
@@ -143,6 +145,17 @@ export default function App() {
                 src={SettingImg}
                 alt=""
               />
+              {essentialData.dbResultMap &&
+                Object.keys(essentialData.dbResultMap).length > 0 && (
+                  <i
+                    className="db-result"
+                    onClick={() => toggleIsDBResultPopupOpen(true)}
+                  >
+                    資料庫
+                    <br />
+                    搜尋結果
+                  </i>
+                )}
               自動化專利審查系統
             </h1>
             <Popup
@@ -150,7 +163,17 @@ export default function App() {
               closeOnDocumentClick
               onClose={() => toggleIsSettingPopupOpen(false)}
             >
-              <SettingsPopup handleClose={toggleIsSettingPopupOpen} />
+              <SettingsPopup
+                setLocalStorageValue={setLocalStorageValue}
+                handleClose={toggleIsSettingPopupOpen}
+              />
+            </Popup>
+            <Popup
+              open={isDBResultPopupOpen}
+              closeOnDocumentClick
+              onClose={() => toggleIsDBResultPopupOpen(false)}
+            >
+              <DBResultPopup handleClose={toggleIsDBResultPopupOpen} />
             </Popup>
             <section
               className="links-section"

@@ -456,12 +456,12 @@ const FigureOfDrawings = ({ handleReInit }) => {
                 {shouldRenderSaveBtn() && (
                   <>
                     <button
-                      onClick={() => {
+                      onClick={async() => {
                         if (checkIfKeyDuplicate()) {
                           window.alert(`有符號重複，請檢查後再按儲存。`);
                           return;
                         }
-                        handleReInit(essentialData, setEssentialData, {
+                        await handleReInit(essentialData, setEssentialData, {
                           method: "figure-drawings",
                           data: Object.keys(copyOfFigure)
                             .map((cur) => {

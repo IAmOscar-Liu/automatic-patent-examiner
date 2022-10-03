@@ -47,8 +47,7 @@
 }
 
 .setting-popup {
-  width: 60vw;
-  max-width: 800px;
+  width: clamp(900px, 70vw, 1000px);
   height: 400px;
   background-color: gainsboro;
   outline: 100vw solid rgba(0, 0, 0, 0.7);
@@ -80,10 +79,64 @@
   transform: translate(-2px, 3px);
 }
 
-.setting-popup button {
+.setting-popup button,
+.db-result-popup button {
   padding: 1px 7px;
   font-size: 1.1em;
   margin: 20px auto 25px auto;
+  cursor: pointer;
+}
+
+.db-result-popup {
+  width: clamp(900px, 70vw, 1000px);
+  height: 600px;
+  background-color: white;
+  outline: 100vw solid rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+}
+
+.db-result-popup h4 {
+  text-align: center;
+  font-size: 1.5em;
+  padding-top: 30px;
+  padding-bottom: 20px;
+}
+
+.db-result-popup > div {
+  flex-grow: 1;
+  width: 80%;
+  margin: auto;
+  overflow-y: scroll;
+}
+
+.db-result-popup > div ul {
+  padding: 0;
+  list-style: none;
+}
+
+.db-result-popup > div ul li {
+  display: grid;
+  grid-template-columns: 3fr 100px 2fr;
+  column-gap: 10px;
+  margin-top: 15px;
+}
+
+.db-result-popup > div ul li:first-of-type {
+  padding-bottom: 7px;
+  border-bottom: 1px solid black;
+  margin-top: 0;
+}
+
+.db-result-popup > div ul li:last-of-type {
+  margin-bottom: 15px;
+}
+
+.db-result-popup > div ul li p {
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+  text-overflow: ellipsis;
 }
 
 .search-popup {
@@ -478,6 +531,10 @@
   font-style: normal;
   right: calc(92% - 170px);
   background: darkgreen;
+}
+
+.App #main-title > i.db-result {
+  right: calc(92% - 180px);
 }
 
 .App #main-title > span > a {

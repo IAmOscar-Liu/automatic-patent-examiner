@@ -103,7 +103,7 @@
           <br/>Z                        軸心
           <br/>θ                        夾角
           <br/>θ                        夾角人
-          <br/>幹你娘**//巨SS
+          <br/>幹你娘你這是在幹麻
         </p>
       </description-of-element>
       <p general="0014">[圖1]係為本案一實施例下的近場通訊系統示意圖。
@@ -195,7 +195,7 @@
     </claim>
   </claims>
   <figure-drawings lang="" figure-labels="圖1">
-    <p general="">100                    天線繞線組
+    <p general="">100                    天線繞組
       <br/>200                    近場通訊模組
       <br/>210                    近場通訊晶片
       <br/>220                    金屬載板
@@ -205,6 +205,7 @@
       <br/>H                       堆疊高度好快
       <br/>Z                        軸心
       <br/>Z1                        軸心
+     <br/>你到底在看三小
     </p>
   </figure-drawings>
   <drawings lang="">

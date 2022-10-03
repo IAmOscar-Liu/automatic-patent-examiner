@@ -28,11 +28,13 @@ export const findMatches = (
     .filter((el) => RegExp(`^[${allSymbolChar}']+`, "i").test(el))
     .map((el) =>
       el.slice(el.match(RegExp(`^[${allSymbolChar}']+`, "i"))[0].length)
-    );
+    )
+    .filter((el) => typeof el === "string" && el.length > 0);
 
   const elementsStartWithAlphabetOrigin = regExp
     .split("|")
     .filter((el) => RegExp(`^[${allSymbolChar}']+`, "i").test(el))
+    .filter((el) => typeof el === "string" && el.length > 0)
     .join("|");
 
   // console.log(elementsStartWithAlphabet);
@@ -53,6 +55,20 @@ export const findMatches = (
         paragraph.slice(match.index + match[0].length)
       );
     });
+
+  /*
+  if (paragraph.startsWith("進一步參考圖1")) {
+    console.log(
+      allFigBetweenMatch(paragraph).filter(
+        (match) =>
+          !/^[@θ%度˚℃]/.test(paragraph.slice(match.index + match[0].length))
+      )
+    );
+    console.log("elementsStartWithAlphabet", elementsStartWithAlphabet);
+    console.log("allMatchesFromFig", allMatchesFromFig);
+    debugger;
+  }
+  */
 
   /*if (paragraph.startsWith("據此，本創作之擺飾品於製作實施時，請一併參閱")) {
     const allCommaMatch = [

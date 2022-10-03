@@ -165,14 +165,14 @@ const Claims = ({ handleReInit }) => {
     );
   };
 
-  const handleSaveAll = () => {
+  const handleSaveAll = async() => {
     if (!checkIfNumOK()) {
       window.alert(`請求項的編號有跳號，請檢查後再按確認。`);
       return;
     }
     // console.log(allUpdateParagraph);
     // debugger;
-    handleReInit(essentialData, setEssentialData, {
+    await handleReInit(essentialData, setEssentialData, {
       method: "allClaimsDetails",
       data: allUpdateParagraph
     });

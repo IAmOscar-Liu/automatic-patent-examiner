@@ -1037,6 +1037,17 @@ const SingleClaim = ({
             </ul>
           </div>
         )}
+        {essentialData.dbResultMap &&
+          Object.keys(essentialData.dbResultMap).length > 0 && (
+            <p
+              style={{
+                color: "rgb(130 45 45)",
+                fontWeight: "bold"
+              }}
+            >
+              &#9733;連接資料庫以尋找請求項之構件
+            </p>
+          )}
         {Object.keys(myReduceMatches).length > 0 && (
           <>
             <input

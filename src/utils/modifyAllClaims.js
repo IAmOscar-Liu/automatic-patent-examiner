@@ -7,9 +7,9 @@ import { modifySingleClaim } from "./modifySingleClaim";
 import { getKeyInRange, isKeyInReserve } from "./otherUtils";
 import { stringToUnicode } from "./stringToUnicode";
 import { modifySingleClaimMatch } from "./modifySingleClaimMatch";
-import { optimizeClaimMatch } from "./optimizeClaimMatch";
+import { lookupDB, optimizeClaimMatch } from "./optimizeClaimMatch";
 
-export const modifyAllClaims = (
+export const modifyAllClaims = async (
   data,
   whichOne,
   {
@@ -19,7 +19,9 @@ export const modifyAllClaims = (
     allClaimsDetails,
     utilityModelTitle,
     figureOfDrawingsMap,
-    applicationNum
+    applicationNum,
+    personalSettings,
+    dbResultMap
   },
   oldClaimDetails,
   manuallyAddValues
@@ -256,7 +258,15 @@ export const modifyAllClaims = (
     );
   });
 
-  // optimize the match isInDescriptionOfElementMap = false
+  // look up db if
+  // 1. useDatabase = true
+  // 2. isInDescriptionOfElementMap = false
+  // 3. shouldLookupDB = true
+  await lookupDB(claims, personalSettings.useDatabase, dbResultMap);
+
+  // optimize the match if
+  // 1. isInDescriptionOfElementMap = false
+  // 2. shouldLookupDB = false
   optimizeClaimMatch(claims);
 
   // Find illegal matches in each claim

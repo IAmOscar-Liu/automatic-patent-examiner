@@ -5,7 +5,7 @@ import { EssentialDataContextProvider } from "../contexts/EssentialDataContext";
 handleClose={toggleIsSettingPopupOpen}
 */
 
-const SettingsPopup = ({ handleClose }) => {
+const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
   const [essentialData, setEssentialData] = useContext(
     EssentialDataContextProvider
   );
@@ -22,15 +22,19 @@ const SettingsPopup = ({ handleClose }) => {
               type="radio"
               name="light-dark"
               checked={!essentialData.personalSettings.isDarkMode}
-              onChange={() =>
+              onChange={() => {
                 setEssentialData((prev) => ({
                   ...prev,
                   personalSettings: {
                     ...prev.personalSettings,
                     isDarkMode: false
                   }
-                }))
-              }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  isDarkMode: false
+                });
+              }}
             />
             日&nbsp;&nbsp;
           </label>
@@ -39,15 +43,19 @@ const SettingsPopup = ({ handleClose }) => {
               type="radio"
               name="light-dark"
               checked={essentialData.personalSettings.isDarkMode}
-              onChange={() =>
+              onChange={() => {
                 setEssentialData((prev) => ({
                   ...prev,
                   personalSettings: {
                     ...prev.personalSettings,
                     isDarkMode: true
                   }
-                }))
-              }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  isDarkMode: true
+                });
+              }}
             />
             夜&nbsp;&nbsp;
           </label>
@@ -85,6 +93,10 @@ const SettingsPopup = ({ handleClose }) => {
                       fontSize: idx
                     }
                   }));
+                  setLocalStorageValue({
+                    ...essentialData.personalSettings,
+                    fontSize: idx
+                  });
                 }}
               />
               {radioList}&nbsp;&nbsp;
@@ -98,15 +110,19 @@ const SettingsPopup = ({ handleClose }) => {
               type="radio"
               name="open-tooltip"
               checked={essentialData.personalSettings.openTooltip}
-              onChange={() =>
+              onChange={() => {
                 setEssentialData((prev) => ({
                   ...prev,
                   personalSettings: {
                     ...prev.personalSettings,
                     openTooltip: true
                   }
-                }))
-              }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  openTooltip: true
+                });
+              }}
             />
             是&nbsp;&nbsp;
           </label>
@@ -115,15 +131,19 @@ const SettingsPopup = ({ handleClose }) => {
               type="radio"
               name="open-tooltip"
               checked={!essentialData.personalSettings.openTooltip}
-              onChange={() =>
+              onChange={() => {
                 setEssentialData((prev) => ({
                   ...prev,
                   personalSettings: {
                     ...prev.personalSettings,
                     openTooltip: false
                   }
-                }))
-              }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  openTooltip: false
+                });
+              }}
             />
             否&nbsp;&nbsp;
           </label>
@@ -135,15 +155,19 @@ const SettingsPopup = ({ handleClose }) => {
               type="radio"
               name="show-symbol"
               checked={essentialData.personalSettings.showClaimElementKey}
-              onChange={() =>
+              onChange={() => {
                 setEssentialData((prev) => ({
                   ...prev,
                   personalSettings: {
                     ...prev.personalSettings,
                     showClaimElementKey: true
                   }
-                }))
-              }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  showClaimElementKey: true
+                });
+              }}
             />
             是&nbsp;&nbsp;
           </label>
@@ -152,15 +176,19 @@ const SettingsPopup = ({ handleClose }) => {
               type="radio"
               name="show-symbol"
               checked={!essentialData.personalSettings.showClaimElementKey}
-              onChange={() =>
+              onChange={() => {
                 setEssentialData((prev) => ({
                   ...prev,
                   personalSettings: {
                     ...prev.personalSettings,
                     showClaimElementKey: false
                   }
-                }))
-              }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  showClaimElementKey: false
+                });
+              }}
             />
             否&nbsp;&nbsp;
           </label>
@@ -172,15 +200,19 @@ const SettingsPopup = ({ handleClose }) => {
               type="radio"
               name="symbol-sync"
               checked={essentialData.personalSettings.synchronizeHighlight}
-              onChange={() =>
+              onChange={() => {
                 setEssentialData((prev) => ({
                   ...prev,
                   personalSettings: {
                     ...prev.personalSettings,
                     synchronizeHighlight: true
                   }
-                }))
-              }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  synchronizeHighlight: true
+                });
+              }}
             />
             是&nbsp;&nbsp;
           </label>
@@ -189,15 +221,19 @@ const SettingsPopup = ({ handleClose }) => {
               type="radio"
               name="symbol-sync"
               checked={!essentialData.personalSettings.synchronizeHighlight}
-              onChange={() =>
+              onChange={() => {
                 setEssentialData((prev) => ({
                   ...prev,
                   personalSettings: {
                     ...prev.personalSettings,
                     synchronizeHighlight: false
                   }
-                }))
-              }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  synchronizeHighlight: false
+                });
+              }}
             />
             否&nbsp;&nbsp;
           </label>
@@ -209,15 +245,19 @@ const SettingsPopup = ({ handleClose }) => {
               type="radio"
               name="pure-text"
               checked={essentialData.personalSettings.readingModePureText}
-              onChange={() =>
+              onChange={() => {
                 setEssentialData((prev) => ({
                   ...prev,
                   personalSettings: {
                     ...prev.personalSettings,
                     readingModePureText: true
                   }
-                }))
-              }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  readingModePureText: true
+                });
+              }}
             />
             是&nbsp;&nbsp;
           </label>
@@ -226,15 +266,64 @@ const SettingsPopup = ({ handleClose }) => {
               type="radio"
               name="pure-text"
               checked={!essentialData.personalSettings.readingModePureText}
-              onChange={() =>
+              onChange={() => {
                 setEssentialData((prev) => ({
                   ...prev,
                   personalSettings: {
                     ...prev.personalSettings,
                     readingModePureText: false
                   }
-                }))
-              }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  readingModePureText: false
+                });
+              }}
+            />
+            否&nbsp;&nbsp;
+          </label>
+        </p>
+        <p>
+          連接資料庫來尋找請求項的構件(須有網路連線，且無法在本機上使用)：
+          <label>
+            <input
+              type="radio"
+              name="use-db"
+              checked={essentialData.personalSettings.useDatabase}
+              onChange={() => {
+                setEssentialData((prev) => ({
+                  ...prev,
+                  personalSettings: {
+                    ...prev.personalSettings,
+                    useDatabase: true
+                  }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  useDatabase: true
+                });
+              }}
+            />
+            是&nbsp;&nbsp;
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="use-db"
+              checked={!essentialData.personalSettings.useDatabase}
+              onChange={() => {
+                setEssentialData((prev) => ({
+                  ...prev,
+                  personalSettings: {
+                    ...prev.personalSettings,
+                    useDatabase: false
+                  }
+                }));
+                setLocalStorageValue({
+                  ...essentialData.personalSettings,
+                  useDatabase: false
+                });
+              }}
             />
             否&nbsp;&nbsp;
           </label>

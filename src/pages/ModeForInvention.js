@@ -246,8 +246,8 @@ const ModeForEnvention = ({ handleReInit }) => {
                 ) && (
                   <>
                     <button
-                      onClick={() => {
-                        handleReInit(essentialData, setEssentialData, {
+                      onClick={async() => {
+                        await handleReInit(essentialData, setEssentialData, {
                           method: "allModeForInventionParagraphDetails",
                           data: allUpdateParagraph
                         });

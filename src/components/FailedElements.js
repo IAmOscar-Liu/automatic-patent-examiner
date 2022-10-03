@@ -274,8 +274,8 @@ const FailedElements = ({ handleReInit }) => {
                 JSON.stringify(failedDescriptionOfElementMap) && (
                 <div>
                   <button
-                    onClick={() => {
-                      handleReInit(essentialData, setEssentialData, {
+                    onClick={async () => {
+                      await handleReInit(essentialData, setEssentialData, {
                         method: "description-of-element",
                         data: Object.keys(descriptionOfElementMap)
                           .map((cur, _iii) => {
@@ -498,7 +498,7 @@ const FailedElements = ({ handleReInit }) => {
                 JSON.stringify(failedFigureOfDrawingsMap) && (
                 <div>
                   <button
-                    onClick={() => {
+                    onClick={async () => {
                       // Test
                       // console.log(
                       //   Object.keys(figureOfDrawingsMap)
@@ -518,7 +518,7 @@ const FailedElements = ({ handleReInit }) => {
                       // );
                       // debugger;
                       // Test
-                      handleReInit(essentialData, setEssentialData, {
+                      await handleReInit(essentialData, setEssentialData, {
                         method: "figure-drawings",
                         data: Object.keys(figureOfDrawingsMap)
                           .map((cur, _iii) => {

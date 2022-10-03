@@ -18,54 +18,7 @@ export const useInit = (
   setAllUpdateModeForInventionParagraph,
   setAllUpdateClaimParagraph
 ) => {
-  useEffect(() => {
-    if (!_essentialData.isProcessing && XMLData.isLoading) {
-      console.log(`reset everything ${new Date().toString().slice(16, 24)}`);
-      setEssentialData((prev) => ({
-        ...prev,
-        isProcessing: true,
-        applicationNum: "",
-        utilityModelTitle: "",
-        utilityModelTitleEn: "",
-        technicalField: [],
-        backgroundArt: [],
-        abstractContent: [],
-        abstractContentEn: [],
-        descriptionOfElementMap: {},
-        figureOfDrawingsMap: {},
-        failedDescriptionOfElementMap: [],
-        failedFigureOfDrawingsMap: [],
-        elementColorMap: {},
-        allAbstractParagraphDetails: [],
-        allTechnicalFieldParagraphDetails: [],
-        allBackgroundArtParagraphDetails: [],
-        allDisclosureParagraphDetails: [],
-        allModeForInventionParagraphDetails: [],
-        allClaimsDetails: [],
-        allDrawings: [],
-        allDrawingsDescription: [],
-        missingData: [],
-        claimPayload: [],
-        preserveValues: [],
-        searchString: "",
-        allErrors: {
-          title: [],
-          descriptionOfElementMap: [],
-          figureOfDrawingsMap: [],
-          allDisclosureParagraphDetails: [],
-          allModeForInventionParagraphDetails: [],
-          allClaimsDetails: [],
-          system: []
-        },
-        globalHighlightOn: true,
-        globalHighlightElement: [],
-        synchronizeHighlight: false
-      }));
-      setAllUpdateDisclosureParagraph([]);
-      setAllUpdateModeForInventionParagraph([]);
-      setAllUpdateClaimParagraph([]);
-    }
-
+  const handler = async () => {
     if (!XMLData.isLoading) {
       const isDataCompleted =
         Object.keys(XMLData.abstractData).length !== 0 &&
@@ -180,7 +133,7 @@ export const useInit = (
           null
         ); // in Reactjs, pass essentialData and setEssentialData
 
-        modifyAllClaims(XMLData.claimsData, -1, essentialData, null, []);
+        await modifyAllClaims(XMLData.claimsData, -1, essentialData, null, []);
         // 產生新型例稿
         generateErrorExp(essentialData);
 
@@ -281,6 +234,58 @@ export const useInit = (
         }));
       }
     }
+  };
+
+  useEffect(() => {
+    if (!_essentialData.isProcessing && XMLData.isLoading) {
+      console.log(`reset everything ${new Date().toString().slice(16, 24)}`);
+      setEssentialData((prev) => ({
+        ...prev,
+        isProcessing: true,
+        applicationNum: "",
+        utilityModelTitle: "",
+        utilityModelTitleEn: "",
+        technicalField: [],
+        backgroundArt: [],
+        abstractContent: [],
+        abstractContentEn: [],
+        descriptionOfElementMap: {},
+        figureOfDrawingsMap: {},
+        failedDescriptionOfElementMap: [],
+        failedFigureOfDrawingsMap: [],
+        elementColorMap: {},
+        allAbstractParagraphDetails: [],
+        allTechnicalFieldParagraphDetails: [],
+        allBackgroundArtParagraphDetails: [],
+        allDisclosureParagraphDetails: [],
+        allModeForInventionParagraphDetails: [],
+        allClaimsDetails: [],
+        allDrawings: [],
+        allDrawingsDescription: [],
+        missingData: [],
+        claimPayload: [],
+        preserveValues: [],
+        searchString: "",
+        allErrors: {
+          title: [],
+          descriptionOfElementMap: [],
+          figureOfDrawingsMap: [],
+          allDisclosureParagraphDetails: [],
+          allModeForInventionParagraphDetails: [],
+          allClaimsDetails: [],
+          system: []
+        },
+        globalHighlightOn: true,
+        globalHighlightElement: [],
+        synchronizeHighlight: false,
+        dbResultMap: {}
+      }));
+      setAllUpdateDisclosureParagraph([]);
+      setAllUpdateModeForInventionParagraph([]);
+      setAllUpdateClaimParagraph([]);
+    }
+
+    handler();
   }, [XMLData]);
 
   return null;

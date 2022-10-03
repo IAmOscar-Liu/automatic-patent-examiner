@@ -515,11 +515,12 @@ export const checkParentClaim = (originalContent, prevClaims, index) => {
           errors.unshift({
             message: `本請求項所依附之請求項${attaches[i]}為多項附屬項${
               type === "direct" ? "直接" : "間接"
-            }依附多項附屬項，該依附之請求項先暫且略過`,
+            }依附多項附屬項`,
             start,
             end: start + (attaches[i] + "").toString().length
           });
-          attaches.splice(i, 1);
+          // 討論過後，決定多項附屬項直(間)接依附的請求項保留
+          // attaches.splice(i, 1);
         }
       }
     }
