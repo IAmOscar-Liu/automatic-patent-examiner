@@ -79,8 +79,19 @@
   transform: translate(-2px, 3px);
 }
 
-.setting-popup button,
-.db-result-popup button {
+.setting-popup > p {
+  display: flex;
+  justify-content: center;
+}
+
+.setting-popup > p button {
+  font-size: 1.1em;
+  padding: 1px 7px;
+  cursor: pointer;
+  margin: 0 5px 25px 5px;
+}
+
+.db-result-popup > button {
   padding: 1px 7px;
   font-size: 1.1em;
   margin: 20px auto 25px auto;
@@ -107,7 +118,7 @@
   flex-grow: 1;
   width: 80%;
   margin: auto;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .db-result-popup > div ul {
@@ -137,6 +148,71 @@
   overflow: hidden;
   display: block;
   text-overflow: ellipsis;
+}
+
+.history-result-popup {
+  height: 635px;
+}
+
+.history-result-popup button {
+  cursor: pointer;
+  padding: 2px 0.25em;
+}
+
+.history-result-popup p.top-panel {
+  width: 80%;
+  margin-left: 10%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.history-result-popup p.top-panel .display-all-btn {
+  margin-right: 10px;
+}
+
+.history-result-popup p.top-panel #num-per-page {
+  width: 60px;
+  margin-right: auto;
+  padding-block: 2px;
+}
+
+.history-result-popup p.top-panel #start-date,
+.history-result-popup p.top-panel #end-date {
+  width: 100px;
+  padding-block: 2px;
+}
+
+.history-result-popup p.top-panel .handle-date-search {
+  margin-left: 5px;
+}
+
+.history-result-popup > div ul li {
+  grid-template-columns: 14ch 12ch auto;
+}
+
+.history-result-popup p.bottom-panel {
+  border-top: 1px solid black;
+  padding-top: 5px;
+  display: flex;
+  align-items: center;
+  width: 80%;
+  margin-left: 10%;
+}
+
+.history-result-popup p.bottom-panel .page-info {
+  margin-left: 20px;
+  margin-right: auto;
+}
+
+.history-result-popup p.bottom-panel .go-to-label {
+  margin-left: auto;
+  margin-right: 10px;
+}
+
+.history-result-popup p.bottom-panel .go-to-label select {
+  width: 40px;
+  font-size: 1.05em;
 }
 
 .search-popup {
@@ -557,7 +633,7 @@
 }
 
 .App #main-title::before {
-  content: "專利一組四科 劉克群製作\A 版本: 2022/8/23";
+  content: "專利一組四科 劉克群製作\A 版本: 2022/10/26";
   top: 12px;
 }
 

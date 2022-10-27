@@ -59,7 +59,8 @@ export default function App({ setLocalStorageValue }) {
     setEssentialData,
     setAllUpdateDisclosureParagraph,
     setAllUpdateModeForInventionParagraph,
-    setAllUpdateClaimParagraph
+    setAllUpdateClaimParagraph,
+    setLocalStorageValue
   );
 
   return (

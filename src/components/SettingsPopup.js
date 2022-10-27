@@ -1,5 +1,6 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { EssentialDataContextProvider } from "../contexts/EssentialDataContext";
+import { defaultPersonalSettings } from "../dict/defaultPersonalSettings";
 
 /*
 handleClose={toggleIsSettingPopupOpen}
@@ -10,6 +11,36 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
     EssentialDataContextProvider
   );
   const radioLists = ["極大", "大", "中", "小", "極小"];
+
+  const resetPersonalSettings = () => {
+    setEssentialData((prev) => ({
+      ...prev,
+      personalSettings: { ...defaultPersonalSettings }
+    }));
+    setLocalStorageValue({
+      ...defaultPersonalSettings
+    });
+  };
+
+  useEffect(() => {
+    switch (essentialData.personalSettings.fontSize) {
+      case 0:
+        document.querySelector(".App").style.fontSize = "1.2em";
+        break;
+      case 1:
+        document.querySelector(".App").style.fontSize = "1.1em";
+        break;
+      case 2:
+        document.querySelector(".App").style.fontSize = "1em";
+        break;
+      case 3:
+        document.querySelector(".App").style.fontSize = "0.9em";
+        break;
+      default:
+        document.querySelector(".App").style.fontSize = "0.8em";
+        break;
+    }
+  }, [essentialData.personalSettings.fontSize]);
 
   return (
     <div className="setting-popup">
@@ -30,10 +61,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     isDarkMode: false
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   isDarkMode: false
-                });
+                }));
               }}
             />
             日&nbsp;&nbsp;
@@ -51,10 +82,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     isDarkMode: true
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   isDarkMode: true
-                });
+                }));
               }}
             />
             夜&nbsp;&nbsp;
@@ -69,23 +100,6 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                 name="font-size"
                 checked={essentialData.personalSettings.fontSize === idx}
                 onChange={() => {
-                  switch (idx) {
-                    case 0:
-                      document.querySelector(".App").style.fontSize = "1.2em";
-                      break;
-                    case 1:
-                      document.querySelector(".App").style.fontSize = "1.1em";
-                      break;
-                    case 2:
-                      document.querySelector(".App").style.fontSize = "1em";
-                      break;
-                    case 3:
-                      document.querySelector(".App").style.fontSize = "0.9em";
-                      break;
-                    default:
-                      document.querySelector(".App").style.fontSize = "0.8em";
-                      break;
-                  }
                   setEssentialData((prev) => ({
                     ...prev,
                     personalSettings: {
@@ -93,10 +107,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                       fontSize: idx
                     }
                   }));
-                  setLocalStorageValue({
-                    ...essentialData.personalSettings,
+                  setLocalStorageValue((prev) => ({
+                    ...prev,
                     fontSize: idx
-                  });
+                  }));
                 }}
               />
               {radioList}&nbsp;&nbsp;
@@ -118,10 +132,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     openTooltip: true
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   openTooltip: true
-                });
+                }));
               }}
             />
             是&nbsp;&nbsp;
@@ -139,10 +153,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     openTooltip: false
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   openTooltip: false
-                });
+                }));
               }}
             />
             否&nbsp;&nbsp;
@@ -163,10 +177,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     showClaimElementKey: true
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   showClaimElementKey: true
-                });
+                }));
               }}
             />
             是&nbsp;&nbsp;
@@ -184,10 +198,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     showClaimElementKey: false
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   showClaimElementKey: false
-                });
+                }));
               }}
             />
             否&nbsp;&nbsp;
@@ -208,10 +222,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     synchronizeHighlight: true
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   synchronizeHighlight: true
-                });
+                }));
               }}
             />
             是&nbsp;&nbsp;
@@ -229,10 +243,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     synchronizeHighlight: false
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   synchronizeHighlight: false
-                });
+                }));
               }}
             />
             否&nbsp;&nbsp;
@@ -253,10 +267,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     readingModePureText: true
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   readingModePureText: true
-                });
+                }));
               }}
             />
             是&nbsp;&nbsp;
@@ -274,10 +288,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     readingModePureText: false
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   readingModePureText: false
-                });
+                }));
               }}
             />
             否&nbsp;&nbsp;
@@ -298,10 +312,10 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     useDatabase: true
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   useDatabase: true
-                });
+                }));
               }}
             />
             是&nbsp;&nbsp;
@@ -319,17 +333,20 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
                     useDatabase: false
                   }
                 }));
-                setLocalStorageValue({
-                  ...essentialData.personalSettings,
+                setLocalStorageValue((prev) => ({
+                  ...prev,
                   useDatabase: false
-                });
+                }));
               }}
             />
             否&nbsp;&nbsp;
           </label>
         </p>
       </div>
-      <button onClick={() => handleClose(false)}>確認</button>
+      <p>
+        <button onClick={resetPersonalSettings}>回復原始設定</button>
+        <button onClick={() => handleClose(false)}>確認</button>
+      </p>
     </div>
   );
 };

@@ -5,16 +5,11 @@ import EssentialDataContext from "./contexts/EssentialDataContext";
 import XMLContext from "./contexts/XMLContext";
 import UpdateParagraphContext from "./contexts/UpdateParagraphContext";
 import useLocalStorage from "./hooks/useLocalStorage";
+import { defaultPersonalSettings } from "./dict/defaultPersonalSettings";
 
 const Root = () => {
   const [value, setValue] = useLocalStorage({
-    isDarkMode: false,
-    fontSize: 2,
-    openTooltip: true,
-    showClaimElementKey: true,
-    synchronizeHighlight: false,
-    readingModePureText: false,
-    useDatabase: false
+    ...defaultPersonalSettings
   });
 
   return (

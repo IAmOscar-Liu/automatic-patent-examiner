@@ -16,7 +16,8 @@ export const useInit = (
   setEssentialData,
   setAllUpdateDisclosureParagraph,
   setAllUpdateModeForInventionParagraph,
-  setAllUpdateClaimParagraph
+  setAllUpdateClaimParagraph,
+  setLocalStorageValue
 ) => {
   const handler = async () => {
     if (!XMLData.isLoading) {
@@ -41,6 +42,40 @@ export const useInit = (
         essentialData.applicationNum = XMLData.applicationNum;
         essentialData.utilityModelTitle = XMLData.utilityModelTitleData;
         essentialData.utilityModelTitleEn = XMLData.utilityModelTitleDataEn;
+        setLocalStorageValue((prev) => {
+          const oldSavedApplications = prev.savedApplications;
+          const d = new Date();
+          const savedDate = `${d.getFullYear()}-${
+            d.getMonth() + 1
+          }-${d.getDate()}`;
+          const newData = {
+            latestTS: +d,
+            appId: essentialData.applicationNum,
+            appTitle: essentialData.utilityModelTitle
+          };
+
+          if (oldSavedApplications[savedDate] === undefined) {
+            oldSavedApplications[savedDate] = [newData];
+          } else {
+            const prevAppIdx = oldSavedApplications[savedDate].findIndex(
+              ({ appId }) => appId === newData.appId
+            );
+            if (prevAppIdx < 0) {
+              oldSavedApplications[savedDate].push(newData);
+            } else {
+              oldSavedApplications[savedDate][prevAppIdx].latestTS =
+                newData.latestTS;
+            }
+            oldSavedApplications[savedDate].sort(
+              (a, b) => b.latestTS - a.latestTS
+            );
+          }
+
+          return {
+            ...prev,
+            savedApplications: oldSavedApplications
+          };
+        });
 
         processAbstract(XMLData.abstractData, essentialData);
         processAbstract(XMLData.abstractDataEn, essentialData);

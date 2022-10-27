@@ -22,7 +22,27 @@ const useLocalStorage = (initialValue) => {
 
   const [value, setValue] = useState(() => {
     const jsonValue = getLocalStorage();
-    if (jsonValue !== null) return JSON.parse(jsonValue);
+    if (jsonValue !== null) {
+      let oldValue = JSON.parse(jsonValue);
+      oldValue = { ...initialValue, ...oldValue };
+
+      if (
+        oldValue.savedApplications &&
+        Object.keys(oldValue.savedApplications).length > 0
+      ) {
+        const currentTS = +new Date();
+        for (let savedDate in oldValue.savedApplications) {
+          try {
+            if (currentTS - +new Date(savedDate) > 60 * 60 * 24 * 31 * 1000) {
+              delete oldValue.savedApplications[savedDate];
+            }
+          } catch (e) {
+            delete oldValue.savedApplications[savedDate];
+          }
+        }
+      }
+      return oldValue;
+    }
     if (typeof initialValue === "function") {
       return initialValue();
     } else {

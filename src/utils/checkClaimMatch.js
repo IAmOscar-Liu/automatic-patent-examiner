@@ -489,7 +489,7 @@ export const checkClaimMatch = (
     // console.log(itemRegExp);
     // debugger;
 
-    let followContent = content.substring(i, maxEnd);
+    let followContent = content.substring(i, maxEnd).split("@##@")[0];
     let followContentFirstCharNoCheck = false;
 
     if (shiftFollowContent(content[i - 1], followContent)) {

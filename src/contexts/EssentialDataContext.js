@@ -38,6 +38,7 @@ const EssentialDataContext = ({ children, personalSettings }) => {
       synchronizeHighlight: false,
       readingModePureText: false,
       useDatabase: false,
+      savedApplications: {},
       ...personalSettings
     },
     searchString: "",

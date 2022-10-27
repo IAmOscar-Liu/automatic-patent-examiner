@@ -5,6 +5,8 @@ import { UpdateParagraphContextProvider } from "../contexts/UpdateParagraphConte
 import { getPathName } from "../utils/getPathName";
 import Dropzone from "react-dropzone";
 import { fullCharToHalf } from "../utils/fullCharToHalf";
+import Popup from "reactjs-popup";
+import HistoryPopup from "../components/HistoryPopup";
 
 const Dashboard = () => {
   const [essentialData, setEssentialData] = useContext(
@@ -15,6 +17,7 @@ const Dashboard = () => {
     UpdateParagraphContextProvider
   );
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isPopupOpen, toggleIsPopupOpen] = useState(false);
   // const [isInEditingMode, setIsInEditingMode] = useState(false);
   // const [textAreaValue, setTextAreaValue] = useState(() => {
   //   if (savedFileContent !== "") {
@@ -120,8 +123,32 @@ const Dashboard = () => {
 
   return (
     <>
-      <section className="title-section">
+      <section className="title-section" style={{ position: "relative" }}>
         <h1>儀表板</h1>
+        <button
+          onClick={() => toggleIsPopupOpen(true)}
+          style={{
+            position: "absolute",
+            top: "100%",
+            right: "1.5vw",
+            cursor: "pointer",
+            outline: "none",
+            border: "2px solid #333",
+            borderRadius: 5,
+            padding: "3px 7px",
+            fontSize: "1.02em",
+            background: "#d8d5d5"
+          }}
+        >
+          歷史記錄
+        </button>
+        <Popup
+          open={isPopupOpen}
+          closeOnDocumentClick
+          onClose={() => toggleIsPopupOpen(false)}
+        >
+          <HistoryPopup handleClose={toggleIsPopupOpen} />
+        </Popup>
       </section>
       <section className="dashboard-section">
         <div className="dashboard-section-btns">
