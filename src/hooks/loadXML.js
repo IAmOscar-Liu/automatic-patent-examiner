@@ -31,7 +31,8 @@ export const useLoadXML = (XMLFileName, XMLFileContent, setXMLData) => {
         disclosureData: {},
         modeForInventionData: {},
         claimsData: {},
-        drawingsData: {}
+        drawingsData: {},
+        figureLabels: "",
       }));
 
       try {
@@ -52,7 +53,7 @@ export const useLoadXML = (XMLFileName, XMLFileContent, setXMLData) => {
             ...prev,
             applicationNum:
               (data && data.attributes && data.attributes["application-num"]) ||
-              ""
+              "",
           }));
         });
         reader.on("tag:utility-model-specification", (data) => {
@@ -60,7 +61,7 @@ export const useLoadXML = (XMLFileName, XMLFileContent, setXMLData) => {
             ...prev,
             applicationNum:
               (data && data.attributes && data.attributes["application-num"]) ||
-              ""
+              "",
           }));
         });
 
@@ -93,7 +94,11 @@ export const useLoadXML = (XMLFileName, XMLFileContent, setXMLData) => {
           setXMLData((prev) => ({ ...prev, descriptionOfElementData: data }));
         }); //符號說明
         reader.on("tag:figure-drawings", (data) =>
-          setXMLData((prev) => ({ ...prev, figureDrawingsData: data }))
+          setXMLData((prev) => ({
+            ...prev,
+            figureDrawingsData: data,
+            figureLabels: data.attributes?.["figure-labels"] ?? "",
+          }))
         ); // 指定代表圖符號
 
         reader.on("tag:drawings", (data) =>
@@ -121,14 +126,14 @@ export const useLoadXML = (XMLFileName, XMLFileContent, setXMLData) => {
         setXMLData((prev) => ({
           ...prev,
           isLoading: false,
-          isXMLFormatOK: true
+          isXMLFormatOK: true,
         }));
       } catch (error) {
         console.log(error);
         setXMLData((prev) => ({
           ...prev,
           isLoading: false,
-          isXMLFormatOK: false
+          isXMLFormatOK: false,
         }));
         window.alert("該XML檔的格式有誤無法讀取，請檢查格式是否正確。");
       }

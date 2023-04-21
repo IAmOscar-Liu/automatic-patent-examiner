@@ -21,7 +21,8 @@ const XMLContext = ({ children }) => {
     modeForInventionData: {},
     claimsData: {},
     drawingsData: {},
-    drawingsDescriptionData: {}
+    drawingsDescriptionData: {},
+    figureLabels: "",
   });
 
   return (

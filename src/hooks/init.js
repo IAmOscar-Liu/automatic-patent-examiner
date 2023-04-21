@@ -313,7 +313,7 @@ export const useInit = (
         globalHighlightOn: true,
         globalHighlightElement: [],
         synchronizeHighlight: false,
-        dbResultMap: {}
+        dbResultMap: {},
       }));
       setAllUpdateDisclosureParagraph([]);
       setAllUpdateModeForInventionParagraph([]);

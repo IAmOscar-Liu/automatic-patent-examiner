@@ -54,7 +54,7 @@ export const isMainElementValid = (
     // 1. 若主要元件名稱字數長度小於3, 所有的字都要出現在新型名稱裡面
     // 2. 若主要元件名稱字數長度大於3, 50%以上的字要出現在新型名稱裡面
     claim.errors.push({
-      message: `標的名稱「${mainElement}」與新型名稱「${utilityModelTitle}」用語不相符。`,
+      message: `標的名稱「${mainElement}」與專利名稱「${utilityModelTitle}」用語不相符。`,
       start: -90,
       end: -89,
       mainElement,

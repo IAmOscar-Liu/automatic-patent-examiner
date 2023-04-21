@@ -974,6 +974,8 @@ else if (
       }
     }
 
+    // if (!isFind) shouldLookupDB = true;
+
     // Test
     // if (claim.num === 5 && item === "環境訊號更包含") {
     //   console.log("after checkPreviousClaimContent");

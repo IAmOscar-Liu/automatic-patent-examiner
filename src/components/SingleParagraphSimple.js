@@ -4,6 +4,15 @@ import warningImg from "../assets/warn.png";
 import errorImg from "../assets/error.png";
 import aboriginalImg from "../assets/aboriginal.png";
 import { EssentialDataContextProvider } from "../contexts/EssentialDataContext";
+import {
+  triggerToggleAboriginalWordBtnColor,
+  triggerToggleBtnColor,
+  triggerToggleErrorBtnColor,
+  triggerToggleFigureBtnColor,
+  triggerTogglePotentialErrorBtnColor,
+  triggerToggleWrongFigureBtnColor,
+  triggerToggleWrongWordBtnColor
+} from "../utils/trigger/paragraph";
 
 const highlightButtonStyle = {
   background: "rgb(182, 100, 71)",
@@ -481,112 +490,16 @@ const SingleParagraphSimple = ({
     essentialData.personalSettings.readingModePureText
   ]);
 
-  const triggerToggleBtnColor = (e) => {
-    // console.log(e.target.classList);
-    const allClasses = e.target.classList;
-    let wantedClass;
-    for (let i = 0; i < allClasses.length; i++) {
-      if (allClasses[i].startsWith("c-")) {
-        wantedClass = allClasses[i];
-        break;
-      }
-    }
-    if (wantedClass) toggleBtnColor(wantedClass.replace("c-", ""));
-  };
-
-  const triggerToggleErrorBtnColor = (e) => {
-    console.log(e.target.classList);
-    const allClasses = e.target.classList;
-    let wantedClass;
-    for (let i = 0; i < allClasses.length; i++) {
-      if (allClasses[i].startsWith("e-")) {
-        wantedClass = allClasses[i];
-        break;
-      }
-    }
-    if (wantedClass) toggleErrorBtnColor(wantedClass.replace("e-", ""));
-  };
-
-  const triggerTogglePotentialErrorBtnColor = (e) => {
-    // console.log(e.target.classList);
-    const allClasses = e.target.classList;
-    let wantedClass;
-    for (let i = 0; i < allClasses.length; i++) {
-      if (allClasses[i].startsWith("pe-")) {
-        wantedClass = allClasses[i];
-        break;
-      }
-    }
-    // console.log(wantedClass);
-    if (wantedClass)
-      togglePotentialErrorBtnColor(wantedClass.replace("pe-", ""));
-  };
-
-  const triggerToggleWrongWordBtnColor = (e) => {
-    // console.log(e.target.classList);
-    const allClasses = e.target.classList;
-    let wantedClass;
-    for (let i = 0; i < allClasses.length; i++) {
-      if (allClasses[i].startsWith("ew-")) {
-        wantedClass = allClasses[i];
-        break;
-      }
-    }
-    // console.log(wantedClass);
-    if (wantedClass) toggleWrongWordBtnColor(wantedClass.replace("ew-", ""));
-  };
-
-  const triggerToggleFigureBtnColor = (e) => {
-    // console.log(e.target.classList);
-    const allClasses = e.target.classList;
-    let wantedClass;
-    for (let i = 0; i < allClasses.length; i++) {
-      if (allClasses[i].startsWith("f-")) {
-        wantedClass = allClasses[i];
-        break;
-      }
-    }
-    // console.log(wantedClass);
-    if (wantedClass) toggleFigureBtnColor(wantedClass.replace("f-", ""));
-  };
-
-  const triggerToggleWrongFigureBtnColor = (e) => {
-    // console.log(e.target.classList);
-    const allClasses = e.target.classList;
-    let wantedClass;
-    for (let i = 0; i < allClasses.length; i++) {
-      if (allClasses[i].startsWith("ef-")) {
-        wantedClass = allClasses[i];
-        break;
-      }
-    }
-    // console.log(wantedClass);
-    if (wantedClass) toggleWrongFigureBtnColor(wantedClass.replace("ef-", ""));
-  };
-
-  const triggerToggleAboriginalWordBtnColor = (e) => {
-    // console.log(e.target.classList);
-    const allClasses = e.target.classList;
-    let wantedClass;
-    for (let i = 0; i < allClasses.length; i++) {
-      if (allClasses[i].startsWith("ab-")) {
-        wantedClass = allClasses[i];
-        break;
-      }
-    }
-    // console.log(wantedClass);
-    if (wantedClass)
-      toggleAboriginalWordBtnColor(wantedClass.replace("ab-", ""));
-  };
-
   useEffect(() => {
     const divRefCurrent = divRef.current;
+
+    const handler = (e) => triggerToggleBtnColor(e, toggleBtnColor);
 
     if (Object.keys(myReduceCorrectKeys).length > 0) {
       // console.log("add myReduceNonMatches eventListener...");
       Object.keys(myReduceCorrectKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.c-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleBtnColor);
+          el.addEventListener("click", handler);
         });
       });
     }
@@ -595,7 +508,7 @@ const SingleParagraphSimple = ({
       // console.log("remove myReduceNonMatches eventListener...");
       Object.keys(myReduceCorrectKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.c-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleBtnColor);
+          el.removeEventListener("click", handler);
         });
       });
     };
@@ -604,11 +517,13 @@ const SingleParagraphSimple = ({
   useEffect(() => {
     const divRefCurrent = divRef.current;
 
+    const handler = (e) => triggerToggleErrorBtnColor(e, toggleErrorBtnColor);
+
     if (Object.keys(myReduceWrongKeys).length > 0) {
       // console.log("add myReduceNonMatches eventListener...");
       Object.keys(myReduceWrongKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.e-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleErrorBtnColor);
+          el.addEventListener("click", handler);
         });
       });
     }
@@ -617,7 +532,7 @@ const SingleParagraphSimple = ({
       // console.log("remove myReduceNonMatches eventListener...");
       Object.keys(myReduceWrongKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.e-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleErrorBtnColor);
+          el.removeEventListener("click", handler);
         });
       });
     };
@@ -626,11 +541,14 @@ const SingleParagraphSimple = ({
   useEffect(() => {
     const divRefCurrent = divRef.current;
 
+    const handler = (e) =>
+      triggerTogglePotentialErrorBtnColor(e, togglePotentialErrorBtnColor);
+
     if (Object.keys(myReducePotentialWrongKeys).length > 0) {
       // console.log("add myReduceNonMatches eventListener...");
       Object.keys(myReducePotentialWrongKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.pe-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerTogglePotentialErrorBtnColor);
+          el.addEventListener("click", handler);
         });
       });
     }
@@ -639,7 +557,7 @@ const SingleParagraphSimple = ({
       // console.log("remove myReduceNonMatches eventListener...");
       Object.keys(myReducePotentialWrongKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.pe-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerTogglePotentialErrorBtnColor);
+          el.removeEventListener("click", handler);
         });
       });
     };
@@ -648,11 +566,14 @@ const SingleParagraphSimple = ({
   useEffect(() => {
     const divRefCurrent = divRef.current;
 
+    const handler = (e) =>
+      triggerToggleWrongWordBtnColor(e, toggleWrongWordBtnColor);
+
     if (Object.keys(myReduceWrongWordKeys).length > 0) {
       // console.log("add myReduceNonMatches eventListener...");
       Object.keys(myReduceWrongWordKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.ew-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleWrongWordBtnColor);
+          el.addEventListener("click", handler);
         });
       });
     }
@@ -661,7 +582,7 @@ const SingleParagraphSimple = ({
       // console.log("remove myReduceNonMatches eventListener...");
       Object.keys(myReduceWrongWordKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.ew-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleWrongWordBtnColor);
+          el.removeEventListener("click", handler);
         });
       });
     };
@@ -670,11 +591,14 @@ const SingleParagraphSimple = ({
   useEffect(() => {
     const divRefCurrent = divRef.current;
 
+    const handler = (e) =>
+      triggerToggleAboriginalWordBtnColor(e, toggleAboriginalWordBtnColor);
+
     if (Object.keys(myReduceAboriginalWordKeys).length > 0) {
       // console.log("add myReduceNonMatches eventListener...");
       Object.keys(myReduceAboriginalWordKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.ab-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleAboriginalWordBtnColor);
+          el.addEventListener("click", handler);
         });
       });
     }
@@ -683,7 +607,7 @@ const SingleParagraphSimple = ({
       // console.log("remove myReduceNonMatches eventListener...");
       Object.keys(myReduceAboriginalWordKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.ab-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleAboriginalWordBtnColor);
+          el.removeEventListener("click", handler);
         });
       });
     };
@@ -692,33 +616,13 @@ const SingleParagraphSimple = ({
   useEffect(() => {
     const divRefCurrent = divRef.current;
 
-    if (Object.keys(myReduceWrongWordKeys).length > 0) {
-      // console.log("add myReduceNonMatches eventListener...");
-      Object.keys(myReduceWrongWordKeys).forEach((key) => {
-        divRefCurrent.querySelectorAll(`.ew-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleWrongWordBtnColor);
-        });
-      });
-    }
-
-    return () => {
-      // console.log("remove myReduceNonMatches eventListener...");
-      Object.keys(myReduceWrongWordKeys).forEach((key) => {
-        divRefCurrent.querySelectorAll(`.ew-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleWrongWordBtnColor);
-        });
-      });
-    };
-  }, [myReduceWrongWordKeys]);
-
-  useEffect(() => {
-    const divRefCurrent = divRef.current;
+    const handler = (e) => triggerToggleFigureBtnColor(e, toggleFigureBtnColor);
 
     if (Object.keys(myReduceFigureKeys).length > 0) {
       // console.log("add myReduceNonMatches eventListener...");
       Object.keys(myReduceFigureKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.f-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleFigureBtnColor);
+          el.addEventListener("click", handler);
         });
       });
     }
@@ -727,7 +631,7 @@ const SingleParagraphSimple = ({
       // console.log("remove myReduceNonMatches eventListener...");
       Object.keys(myReduceFigureKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.f-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleFigureBtnColor);
+          el.removeEventListener("click", handler);
         });
       });
     };
@@ -736,11 +640,14 @@ const SingleParagraphSimple = ({
   useEffect(() => {
     const divRefCurrent = divRef.current;
 
+    const handler = (e) =>
+      triggerToggleWrongFigureBtnColor(e, toggleWrongFigureBtnColor);
+
     if (Object.keys(myReduceWrongFigureKeys).length > 0) {
       // console.log("add myReduceNonMatches eventListener...");
       Object.keys(myReduceWrongFigureKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.ef-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleWrongFigureBtnColor);
+          el.addEventListener("click", handler);
         });
       });
     }
@@ -749,7 +656,7 @@ const SingleParagraphSimple = ({
       // console.log("remove myReduceNonMatches eventListener...");
       Object.keys(myReduceWrongFigureKeys).forEach((key) => {
         divRefCurrent.querySelectorAll(`.ef-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleWrongFigureBtnColor);
+          el.removeEventListener("click", handler);
         });
       });
     };

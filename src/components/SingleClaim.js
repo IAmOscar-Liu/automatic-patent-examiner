@@ -1,15 +1,20 @@
-import React, { useRef, useState, useEffect, useContext } from "react";
-import ClaimEditingForm from "./ClaimEditingForm";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import ReactTooltip from "react-tooltip";
 import checkedImg from "../assets/checked.png";
 import errorImg from "../assets/error.png";
 import modifyImg from "../assets/hammer.png";
 import switchImg from "../assets/switch.png";
-import ClaimPopup from "./ClaimPopup";
-import { allThisWords } from "../dict/allThisWords";
-import { stringToUnicode } from "../utils/stringToUnicode";
-import { highlightClaimContent } from "../utils/modifyAllClaims";
-import ReactTooltip from "react-tooltip";
 import { EssentialDataContextProvider } from "../contexts/EssentialDataContext";
+import { highlightClaimContent } from "../utils/modifyAllClaims";
+import { stringToUnicode } from "../utils/stringToUnicode";
+import {
+  triggerPopup,
+  triggerToggleBtnColor,
+  triggerToggleErrorBtnColor,
+  triggerToggleModifiedBtnColor
+} from "../utils/trigger/claim";
+import ClaimEditingForm from "./ClaimEditingForm";
+import ClaimPopup from "./ClaimPopup";
 
 const SingleClaim = ({
   index,
@@ -531,107 +536,6 @@ const SingleClaim = ({
     essentialData.personalSettings.synchronizeHighlight
   ]);
 
-  const triggerToggleBtnColor = (e) => {
-    // console.log(e.target.classList);
-    const allClasses = e.target.classList;
-    let wantedClass;
-    for (let i = 0; i < allClasses.length; i++) {
-      if (allClasses[i].startsWith("c-") || allClasses[i].startsWith("u-")) {
-        wantedClass = allClasses[i];
-        break;
-      }
-    }
-    // console.log(wantedClass);
-    toggleBtnColor(wantedClass.replace(/[cu]-/, ""));
-  };
-
-  const triggerToggleErrorBtnColor = (e) => {
-    // console.log(e.target.classList);
-    const allClasses = e.target.classList;
-    let wantedClass;
-    for (let i = 0; i < allClasses.length; i++) {
-      if (allClasses[i].startsWith("e-")) {
-        wantedClass = allClasses[i];
-        break;
-      }
-    }
-    // console.log(wantedClass);
-    toggleErrorBtnColor(wantedClass.replace("e-", ""));
-  };
-
-  const triggerToggleModifiedBtnColor = (e) => {
-    // console.log(e.target.classList);
-    const allClasses = e.target.classList;
-    let wantedClass;
-    for (let i = 0; i < allClasses.length; i++) {
-      if (allClasses[i].startsWith("m-")) {
-        wantedClass = allClasses[i];
-        break;
-      }
-    }
-    // console.log(wantedClass);
-    toggleModifiedBtnColor(wantedClass.replace("m-", ""));
-  };
-
-  const triggerPopup = (event) => {
-    const {
-      elitem,
-      elvalue,
-      elfullvalue,
-      start: _start,
-      end: _end,
-      realstart: _realstart,
-      indexofmatch
-    } = event.currentTarget.dataset;
-    const start = parseInt(_start);
-    const end = parseInt(_end);
-    const valueEnd = start + elvalue.length;
-    const realstart = parseInt(_realstart);
-    setPopupStart(start);
-    // setPopupEnd(end);
-    setPopupEnd(valueEnd);
-    setPopupIndex(parseInt(indexofmatch));
-    setPopupItem(elitem);
-    setPopupFullValue(elfullvalue === "none" ? "" : elfullvalue);
-    setPopupAvailableContent(() => {
-      // const nextStart = [...matches, ...usedElements, ...preUsedElementsNonUsed]
-      const nextStart = [...matches, ...usedElements]
-        .sort((a, b) => a.start - b.start)
-        .find((mt) => (mt.realStart || mt.start) >= end);
-
-      // console.log(nextStart);
-      // debugger;
-
-      let valueStartAt = start;
-      if (realstart >= 0) {
-        valueStartAt =
-          realstart +
-          content.slice(realstart).match(RegExp(allThisWords()))[0].length;
-      }
-      const frontStr = content.substring(valueStartAt, valueEnd);
-      const availableStr = nextStart
-        ? content.substring(valueEnd, nextStart.realStart || nextStart.start)
-        : content.substring(valueEnd, content.length);
-      const endStrMatch = availableStr.match(
-        RegExp(
-          "(@|、|，|、|，|-|；|:|,|。|/|\\\\|\\?|\\.|\\+|\\[|\\]|\\(|\\)|{|}|「|」)"
-        )
-      );
-      if (endStrMatch) {
-        return {
-          startAt: valueStartAt,
-          content: frontStr + availableStr.slice(0, endStrMatch.index)
-        };
-      } else {
-        return {
-          startAt: valueStartAt,
-          content: frontStr + availableStr
-        };
-      }
-    });
-    toggleIsPopupOpen((prev) => !prev);
-  };
-
   const handleUpdateMatch = (updateMatch) => {
     const newMatches = copyOfSingleMatches.map((match) => {
       if (match.indexOfMatch === updateMatch.popupIndex) {
@@ -699,12 +603,28 @@ const SingleClaim = ({
   useEffect(() => {
     const divRefCurrent = divRef.current;
 
+    const clickHandler = (e) => triggerToggleBtnColor(e, toggleBtnColor);
+
+    const dbClickHandler = (event) =>
+      triggerPopup(event, {
+        content,
+        matches,
+        usedElements,
+        setPopupStart,
+        setPopupEnd,
+        setPopupIndex,
+        setPopupItem,
+        setPopupFullValue,
+        setPopupAvailableContent,
+        toggleIsPopupOpen
+      });
+
     if (Object.keys(myReduceMatches).length > 0) {
       // console.log("add myReduceMatches eventListener...");
       Object.keys(myReduceMatches).forEach((key) => {
         divRefCurrent.querySelectorAll(`.c-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleBtnColor);
-          el.addEventListener("dblclick", triggerPopup);
+          el.addEventListener("click", clickHandler);
+          el.addEventListener("dblclick", dbClickHandler);
           /*
           if (
             essentialData.personalSettings.showClaimElementKey &&
@@ -735,8 +655,8 @@ const SingleClaim = ({
       // console.log("remove myReduceMatches eventListener...");
       Object.keys(myReduceMatches).forEach((key) => {
         divRefCurrent.querySelectorAll(`.c-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleBtnColor);
-          el.removeEventListener("dblclick", triggerPopup);
+          el.removeEventListener("click", clickHandler);
+          el.removeEventListener("dblclick", dbClickHandler);
         });
       });
       /* Object.keys(myReduceMatches).forEach((key) => {
@@ -755,11 +675,13 @@ const SingleClaim = ({
   useEffect(() => {
     const divRefCurrent = divRef.current;
 
+    const handler = (e) => triggerToggleBtnColor(e, toggleBtnColor);
+
     if (Object.keys(myReduceUsedElements).length > 0) {
       // console.log("add myReduceNonMatches eventListener...");
       Object.keys(myReduceUsedElements).forEach((key) => {
         divRefCurrent.querySelectorAll(`.u-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleBtnColor);
+          el.addEventListener("click", handler);
           /*
           if (
             essentialData.personalSettings.showClaimElementKey &&
@@ -782,7 +704,7 @@ const SingleClaim = ({
     return () => {
       Object.keys(myReduceUsedElements).forEach((key) => {
         divRefCurrent.querySelectorAll(`.u-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleBtnColor);
+          el.removeEventListener("click", handler);
         });
       });
     };
@@ -795,12 +717,29 @@ const SingleClaim = ({
   useEffect(() => {
     const divRefCurrent = divRef.current;
 
+    const clickHandler = (e) =>
+      triggerToggleErrorBtnColor(e, toggleErrorBtnColor);
+
+    const dbClickHandler = (event) =>
+      triggerPopup(event, {
+        content,
+        matches,
+        usedElements,
+        setPopupStart,
+        setPopupEnd,
+        setPopupIndex,
+        setPopupItem,
+        setPopupFullValue,
+        setPopupAvailableContent,
+        toggleIsPopupOpen
+      });
+
     if (Object.keys(myReduceNonMatches).length > 0) {
       // console.log("add myReduceNonMatches eventListener...");
       Object.keys(myReduceNonMatches).forEach((key) => {
         divRefCurrent.querySelectorAll(`.e-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleErrorBtnColor);
-          el.addEventListener("dblclick", triggerPopup);
+          el.addEventListener("click", clickHandler);
+          el.addEventListener("dblclick", dbClickHandler);
           /*
           if (
             myReduceNonMatches[key].keyFromGroup &&
@@ -816,8 +755,8 @@ const SingleClaim = ({
       // console.log("remove myReduceNonMatches eventListener...");
       Object.keys(myReduceNonMatches).forEach((key) => {
         divRefCurrent.querySelectorAll(`.e-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleErrorBtnColor);
-          el.removeEventListener("dblclick", triggerPopup);
+          el.removeEventListener("click", clickHandler);
+          el.removeEventListener("dblclick", dbClickHandler);
         });
       });
     };
@@ -826,12 +765,29 @@ const SingleClaim = ({
   useEffect(() => {
     const divRefCurrent = divRef.current;
 
+    const clickHandler = (e) =>
+      triggerToggleModifiedBtnColor(e, toggleModifiedBtnColor);
+
+    const dbClickHandler = (event) =>
+      triggerPopup(event, {
+        content,
+        matches,
+        usedElements,
+        setPopupStart,
+        setPopupEnd,
+        setPopupIndex,
+        setPopupItem,
+        setPopupFullValue,
+        setPopupAvailableContent,
+        toggleIsPopupOpen
+      });
+
     if (Object.keys(myReduceModifiedMatches).length > 0) {
       // console.log("add myReduceNonMatches eventListener...");
       Object.keys(myReduceModifiedMatches).forEach((key) => {
         divRefCurrent.querySelectorAll(`.m-${key}`).forEach((el) => {
-          el.addEventListener("click", triggerToggleModifiedBtnColor);
-          el.addEventListener("dblclick", triggerPopup);
+          el.addEventListener("click", clickHandler);
+          el.addEventListener("dblclick", dbClickHandler);
         });
       });
     }
@@ -840,8 +796,8 @@ const SingleClaim = ({
       // console.log("remove myReduceNonMatches eventListener...");
       Object.keys(myReduceModifiedMatches).forEach((key) => {
         divRefCurrent.querySelectorAll(`.m-${key}`).forEach((el) => {
-          el.removeEventListener("click", triggerToggleModifiedBtnColor);
-          el.removeEventListener("dblclick", triggerPopup);
+          el.removeEventListener("click", clickHandler);
+          el.removeEventListener("dblclick", dbClickHandler);
         });
       });
     };

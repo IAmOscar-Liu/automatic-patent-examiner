@@ -1,8 +1,10 @@
 import {
   claimStartReg,
   getAllClaims,
+  claimHasOrNoAnd,
   shouldClaimUseAny
 } from "../dict/claimReg";
+import { claimStartTerms } from "../dict/claimStartTerms";
 import { getKeyInRange } from "./otherUtils";
 
 export const checkCoOperatingClaim = (originalContent, prevClaims, index) => {
@@ -55,7 +57,9 @@ export const checkCoOperatingClaim = (originalContent, prevClaims, index) => {
     // 未以選擇式為之
     if (
       shouldClaimUseAny(claimMatchString, claimRanges) &&
-      !contentStart.slice(claimMatchString.length).match(/任意?一項/)
+      !contentStart
+        .slice(claimMatchString.length)
+        .match(/(其中任意?|任意?其中|其中|任意?)一項/)
     ) {
       errors.unshift({
         message: `引用記載型式未以選擇式為之`,
@@ -275,17 +279,19 @@ export const checkParentClaim = (originalContent, prevClaims, index) => {
 
   try {
     if (
-      !originalContent.match(
-        /^(.*?)(申請專利範圍請求項|申請專利範圍|權利要求|請求項)/
-      )
+      // !originalContent.match(
+      //   /^(.*?)(申請專利範圍請求項|申請專利範圍|權利要求|請求項)/
+      // )
+      !originalContent.match(RegExp(`^(.*?)(${claimStartTerms})`))
     )
       throw Error("無法判斷此請求項為獨立項或附屬項");
 
     // 統一把開頭的「如」，「依據」去掉
     const content = originalContent.slice(
-      originalContent.match(
-        /^(.*?)(申請專利範圍請求項|申請專利範圍|權利要求|請求項)/
-      )[1].length
+      // originalContent.match(
+      //   /^(.*?)(申請專利範圍請求項|申請專利範圍|權利要求|請求項)/
+      // )[1].length
+      originalContent.match(RegExp(`^(.*?)(${claimStartTerms})`))[1].length
     );
 
     const contentStart = content.split(/[:，;]/)[0];
@@ -301,8 +307,10 @@ export const checkParentClaim = (originalContent, prevClaims, index) => {
 
     // 未以選擇式為之
     if (
-      shouldClaimUseAny(claimMatchString, claimRanges) &&
-      !contentStart.slice(claimMatchString.length).match(/任意?一項/)
+      !claimHasOrNoAnd(claimMatchString, claimRanges) &&
+      !contentStart
+        .slice(claimMatchString.length)
+        .match(/(其中任意?|任意?其中|其中|任意?)一項/)
     ) {
       errors.unshift({
         message: `多項附屬項未以選擇式為之`,

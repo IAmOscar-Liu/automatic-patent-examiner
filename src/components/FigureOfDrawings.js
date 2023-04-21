@@ -4,18 +4,20 @@ import editIcon from "../assets/img_386644.png";
 import deleteIcon from "../assets/delete_icon.png";
 import { isKeyValid } from "../dict/keyRegs";
 import { handleMultipleValues } from "../utils/otherUtils";
+import { XMLContextProvider } from "../contexts/XMLContext";
 
 const FigureOfDrawings = ({ handleReInit }) => {
   const [essentialData, setEssentialData] = useContext(
     EssentialDataContextProvider
   );
+  const [XMLData] = useContext(XMLContextProvider);
   const [isCollapse, setIsCollapse] = useState(false);
   const [copyOfFigure, setCopyOfFigure] = useState({});
   const [onEditingLists, setOnEdigintLists] = useState([]);
   const [onAddingElement, setOnAddingElement] = useState(false);
   const [addElementValue, setAddElementValue] = useState({
     symbol: "",
-    elName: ""
+    elName: "",
   });
 
   const checkIfKeyDuplicate = () => {
@@ -94,8 +96,8 @@ const FigureOfDrawings = ({ handleReInit }) => {
         num: Object.keys(prev).length + 100000,
         key: symbol,
         newKey: null,
-        newValues: null
-      }
+        newValues: null,
+      },
     }));
     setOnAddingElement(false);
     setAddElementValue({ symbol: "", elName: "" });
@@ -110,8 +112,8 @@ const FigureOfDrawings = ({ handleReInit }) => {
           num,
           key: cur,
           newKey: null,
-          newValues: null
-        }
+          newValues: null,
+        },
       }),
       {}
     );
@@ -123,7 +125,7 @@ const FigureOfDrawings = ({ handleReInit }) => {
   const setGlobalHighlightElement = (id) => {
     // console.log(id);
     const prevGlobalHighlightElement = [
-      ...essentialData.globalHighlightElement
+      ...essentialData.globalHighlightElement,
     ];
 
     if (prevGlobalHighlightElement.find((el) => el === id)) {
@@ -132,13 +134,13 @@ const FigureOfDrawings = ({ handleReInit }) => {
         globalHighlightOn: !prevGlobalHighlightElement.length !== 1,
         globalHighlightElement: prevGlobalHighlightElement.filter(
           (g) => g !== id
-        )
+        ),
       }));
     } else {
       setEssentialData((prev) => ({
         ...prev,
         globalHighlightOn: true,
-        globalHighlightElement: [...prevGlobalHighlightElement, id]
+        globalHighlightElement: [...prevGlobalHighlightElement, id],
       }));
     }
   };
@@ -176,6 +178,11 @@ const FigureOfDrawings = ({ handleReInit }) => {
           Object.keys(copyOfFigure).length > 0 &&
           onEditingLists.length > 0 && (
             <>
+              {XMLData.figureLabels && (
+                <h5 className="figure-labels">
+                  【指定代表圖】： {XMLData.figureLabels}
+                </h5>
+              )}
               <ul>
                 <li>
                   <span>符號</span>
@@ -219,7 +226,7 @@ const FigureOfDrawings = ({ handleReInit }) => {
                                     (el) => el === id
                                   )
                                 ? liColor
-                                : "transparent"
+                                : "transparent",
                             }
                           : status === "element inconsistent" ||
                             status === "Not in description of element"
@@ -237,12 +244,12 @@ const FigureOfDrawings = ({ handleReInit }) => {
                               color: "rgb(255,0,0)",
                               fontWeight: "bold",
                               boxShadow: "none",
-                              textShadow: "2px 2px 1px black"
+                              textShadow: "2px 2px 1px black",
                             }
                           : {
                               backgroundColor: "rgb(255,0,0)",
                               fontWeight: 700,
-                              border: "2px #111 solid"
+                              border: "2px #111 solid",
                             };
                       return (
                         <li key={key} style={liStyle}>
@@ -259,8 +266,8 @@ const FigureOfDrawings = ({ handleReInit }) => {
                                       newKey:
                                         e.target.value === key
                                           ? null
-                                          : e.target.value
-                                    }
+                                          : e.target.value,
+                                    },
                                   }))
                                 }
                               />
@@ -296,8 +303,8 @@ const FigureOfDrawings = ({ handleReInit }) => {
                                               ...e.target.value
                                                 .split(/[/,()（）]/)
                                                 .map((v) => v.trim())
-                                            ] */
-                                    }
+                                            ] */,
+                                    },
                                   }))
                                 }
                               />
@@ -383,7 +390,7 @@ const FigureOfDrawings = ({ handleReInit }) => {
                     onChange={(e) =>
                       setAddElementValue((prev) => ({
                         ...prev,
-                        symbol: e.target.value
+                        symbol: e.target.value,
                       }))
                     }
                   />
@@ -397,7 +404,7 @@ const FigureOfDrawings = ({ handleReInit }) => {
                     onChange={(e) =>
                       setAddElementValue((prev) => ({
                         ...prev,
-                        elName: e.target.value
+                        elName: e.target.value,
                       }))
                     }
                   />
@@ -429,7 +436,7 @@ const FigureOfDrawings = ({ handleReInit }) => {
                       setEssentialData((prev) => ({
                         ...prev,
                         globalHighlightOn: true,
-                        globalHighlightElement: []
+                        globalHighlightElement: [],
                       }))
                     }
                   >
@@ -443,7 +450,7 @@ const FigureOfDrawings = ({ handleReInit }) => {
                       onClick={() =>
                         setEssentialData((prev) => ({
                           ...prev,
-                          globalHighlightOn: false
+                          globalHighlightOn: false,
                         }))
                       }
                     >
@@ -456,7 +463,7 @@ const FigureOfDrawings = ({ handleReInit }) => {
                 {shouldRenderSaveBtn() && (
                   <>
                     <button
-                      onClick={async() => {
+                      onClick={async () => {
                         if (checkIfKeyDuplicate()) {
                           window.alert(`有符號重複，請檢查後再按儲存。`);
                           return;
@@ -480,10 +487,10 @@ const FigureOfDrawings = ({ handleReInit }) => {
                                   curEl.num >= 100000
                                     ? curEl.num - 100000
                                     : curEl.num,
-                                el: `${_key} ${_value}`
+                                el: `${_key} ${_value}`,
                               };
                             })
-                            .concat(essentialData.failedFigureOfDrawingsMap)
+                            .concat(essentialData.failedFigureOfDrawingsMap),
                         });
                         setOnAddingElement(false);
                         setAddElementValue({ symbol: "", elName: "" });

@@ -5,6 +5,7 @@ import { allThisWords } from "../dict/allThisWords";
 import { pickColor } from "../dict/elementColors";
 import { isMainElementValid } from "./isMainElementValid";
 import { getMapValues } from "./otherUtils";
+import { claimStartTerms } from "../dict/claimStartTerms";
 
 export const modifySingleClaimMatch = (
   index,
@@ -41,7 +42,7 @@ export const modifySingleClaimMatch = (
       const myMainElement = claim.content
         .split(/[:，;。]/)[0]
         .match(
-          /^一種?(如(申請專利範圍請求項|申請專利範圍|權利要求|請求項).*?(所述之|所述的|所述|之|的))?(.*)/
+          `^一種?(如(${claimStartTerms}).*?(所述之|所述的|所述|之|的))?(.*)`
         );
 
       if (myMainElement) {
@@ -59,16 +60,12 @@ export const modifySingleClaimMatch = (
     } else if (claim.type === "additional") {
       let myMainElement = claim.content
         .split(/[:，;。]/)[0]
-        .match(
-          /(.*(申請專利範圍請求項|申請專利範圍|權利要求|請求項).+?(所述之|所述的|所述|之|的))(.*)/
-        );
+        .match(`(.*(${claimStartTerms}).+?(所述之|所述的|所述|之|的))(.*)`);
 
       if (!myMainElement) {
         myMainElement = claim.content
           .split(/[:，;。]/)[0]
-          .match(
-            /(.*(申請專利範圍請求項|申請專利範圍|權利要求|請求項).*?([0-9]+項?))(.*)/
-          );
+          .match(`(.*(${claimStartTerms}).*?([0-9]+項?))(.*)`);
       }
 
       if (myMainElement) {
@@ -93,6 +90,8 @@ export const modifySingleClaimMatch = (
           );
         }
       } else {
+        console.log(claim.content);
+        debugger;
         throw Error("無法判斷此請求項為獨立項或附屬項");
       }
     } else {

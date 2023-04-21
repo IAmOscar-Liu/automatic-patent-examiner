@@ -238,7 +238,9 @@ const SingleParagraphV2 = ({
     // }
 
     divRef.current.querySelector(".content").innerHTML = `【${
-      !general.includes("技術") ? general : general.match(/[0-9]+/)[0]
+      general.includes("技術") && general.match(/【(.*?)】/)
+        ? general.match(/【(.*?)】/)[1]
+        : general
     }】 ${modifiedParagraphWithSearchStr || modifiedParagraph}${
       abstractEn ? "<br/><br/>" + abstractEn : ""
     }`;

@@ -1,5 +1,16 @@
 export const fullCharToHalf = (_content) => {
-  const content = _content.split("");
+  const content = _content
+    .replaceAll("&quot;", `"`)
+    .replaceAll(`&apos;`, "'")
+    .replaceAll(`&lsquo;`, "‘")
+    .replaceAll(`&rsquo;`, "’")
+    .replaceAll(`&sbquo;`, "‚")
+    .replaceAll(`&ldquo;`, "“")
+    .replaceAll(`&rdquo;`, "”")
+    .replaceAll(`&bdquo;`, "„")
+    .replaceAll(`&prime;`, "′")
+    .replaceAll(`&Prime;`, "″");
+  //.split("");
   // console.log("content length: ", content.length);
   let itrStart = 0;
   let newContent = "";

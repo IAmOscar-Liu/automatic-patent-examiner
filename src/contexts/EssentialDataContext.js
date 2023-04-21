@@ -57,7 +57,7 @@ const EssentialDataContext = ({ children, personalSettings }) => {
     },
     globalHighlightOn: true,
     globalHighlightElement: [],
-    dbResultMap: {}
+    dbResultMap: {},
   });
 
   return (

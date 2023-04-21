@@ -6,7 +6,10 @@ import { getPathName } from "../utils/getPathName";
 import Dropzone from "react-dropzone";
 import { fullCharToHalf } from "../utils/fullCharToHalf";
 import Popup from "reactjs-popup";
+import mammoth from "mammoth";
 import HistoryPopup from "../components/HistoryPopup";
+import parseHTML from "../utils/parseHtml/parseHTML";
+import xmlbuilder from "../utils/parseHtml/xmlbuilder";
 
 const Dashboard = () => {
   const [essentialData, setEssentialData] = useContext(
@@ -88,10 +91,10 @@ const Dashboard = () => {
     }
     const file = acceptedFiles[0];
     const fileName = file.name;
-    const msg = `無法讀取檔案${fileName}，請確認檔案是否為XML檔並重新選取一次。`;
+    const msg = `無法讀取檔案${fileName}，請確認檔案是否為XML或WORD檔並重新選取一次。`;
     try {
-      if (!/.xml$/.test(fileName)) {
-        const fileNotXmlErrMsg = `檔案${fileName}不是XML檔，請選擇XML檔。`;
+      if (!/.xml$/.test(fileName) && !/.docx$/.test(fileName)) {
+        const fileNotXmlErrMsg = `檔案${fileName}不是XML或WORD檔，請選擇正確的檔案格式。`;
         setDragAreaMsg(fileNotXmlErrMsg);
         window.alert(fileNotXmlErrMsg);
         return;
@@ -109,12 +112,45 @@ const Dashboard = () => {
       };
       reader.onload = () => {
         // Do whatever you want with the file contents
-        const binaryStr = reader.result;
-        // convert 0-9 a-z A-Z from full to half
-        const convertFullToHalf = fullCharToHalf(binaryStr);
-        handleFileChange(file.name, convertFullToHalf);
+        const readerResult = reader.result;
+        if (/.docx$/.test(fileName)) {
+          mammoth
+            .convertToHtml(
+              { arrayBuffer: readerResult },
+              {
+                convertImage: mammoth.images.imgElement((image) => {
+                  return image.read("base64").then(() => {
+                    return {
+                      src: "data:" + image.contentType
+                    };
+                  });
+                })
+              }
+            )
+            .then((resultObject) => {
+              const html = resultObject.value;
+              const htmlObject = parseHTML(html);
+              // console.log(htmlObject);
+              const xmlResult = xmlbuilder(htmlObject);
+              // console.log(xmlResult);
+              // debugger;
+              // convert 0-9 a-z A-Z from full to half
+              const convertFullToHalf = fullCharToHalf(xmlResult);
+              handleFileChange(file.name, convertFullToHalf);
+            })
+            .catch((mammothErr) => {
+              console.error(mammothErr);
+              setDragAreaMsg(msg);
+              window.alert(msg);
+            });
+        } else {
+          // convert 0-9 a-z A-Z from full to half
+          const convertFullToHalf = fullCharToHalf(readerResult);
+          handleFileChange(file.name, convertFullToHalf);
+        }
       };
-      reader.readAsText(file, "utf8");
+      if (/.xml$/.test(fileName)) reader.readAsText(file, "utf8");
+      else if (/.docx$/.test(fileName)) reader.readAsArrayBuffer(file);
     } catch (error) {
       setDragAreaMsg(msg);
       window.alert(msg);
@@ -172,7 +208,7 @@ const Dashboard = () => {
               }))
             }
           >
-            選取XML檔案
+            選取XML或WORD檔案
           </button>
         </div>
         {savedFileContent.isInEditingMode ? (

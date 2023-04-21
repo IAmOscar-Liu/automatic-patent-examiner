@@ -388,6 +388,15 @@
   height: 0;
 }
 
+.App .figure-content .figure-labels {
+  font-size: 1.2em;
+  border-radius: 99999px;
+  border: 2px solid #582c0d;
+  margin-bottom: 10px;
+  padding: 2px 9px;
+  background-color: #dcaa99;
+}
+
 .App .description-content ul,
 .App .figure-content ul,
 .App .drawing-content ul {
@@ -633,7 +642,7 @@
 }
 
 .App #main-title::before {
-  content: "專利一組四科 劉克群製作\A 版本: 2022/10/26";
+  content: "專利一組四科 劉克群製作\A 版本: 2023/4/19";
   top: 12px;
 }
 
@@ -799,6 +808,7 @@
   letter-spacing: 1.5px;
   border: blueviolet 3px solid;
   cursor: pointer;
+  min-width: 28ch;
 }
 
 .App
