@@ -9,9 +9,8 @@ export const claimStartReg = RegExp(
 export const getAllClaims = (reg) =>
   reg
     .split(/以及|[,，、或與和及跟]/)
-    .map((e) =>
-      e.replaceAll(RegExp(`${claimStartTerms}|\\(|\\)|\\s`, "g"), "")
-    );
+    .map((e) => e.replaceAll(RegExp(`${claimStartTerms}|\\(|\\)|\\s`, "g"), ""))
+    .map((e) => e.replaceAll(/第|項/g, ""));
 
 export const shouldClaimUseAny = (claimMatchString, claimRanges) => {
   console.log("claimMatchString", claimMatchString);

@@ -6,7 +6,7 @@ import {
   figWithCommaBetween,
   figWithThisCommaBetween,
   figWithRangeBetween,
-  figWithThisRangeBetween
+  figWithThisRangeBetween,
 } from "../dict/figReg";
 import { allKeyBetweenMatch, allSymbolChar } from "../dict/keyRegs";
 import { getKeyInRange } from "./otherUtils";
@@ -55,6 +55,12 @@ export const findMatches = (
         paragraph.slice(match.index + match[0].length)
       );
     });
+
+  // if (allFigBetweenMatch(paragraph).length > 0) {
+  //   console.log(allFigBetweenMatch(paragraph));
+  //   console.log(allMatchesFromFig);
+  //   debugger;
+  // }
 
   /*
   if (paragraph.startsWith("進一步參考圖1")) {
@@ -133,6 +139,9 @@ export const findMatches = (
 
     match.type = "figure";
     match.keys = keys.map((k) => "圖" + k);
+
+    // console.log(match);
+    // debugger;
 
     figMatches.push(match);
     // console.log("we fine one");
@@ -683,7 +692,8 @@ export const findMatches = (
         ...((descriptionOfElementMap[key] &&
           descriptionOfElementMap[key].values) ||
           []),
-        ...((figureOfDrawingsMap[key] && figureOfDrawingsMap[key].values) || [])
+        ...((figureOfDrawingsMap[key] && figureOfDrawingsMap[key].values) ||
+          []),
       ];
 
       if (matchedPreElements.length > 0) {
@@ -984,7 +994,7 @@ export const findMatches = (
     ...wrongCharMatches,
     ...symbolMatches,
     ...wrongWordMatches,
-    ...aboriginalMatches
+    ...aboriginalMatches,
   ].sort((a, b) => a.index - b.index);
 
   matches = matches.reduce((acc, cur) => {
@@ -1022,7 +1032,7 @@ const findClosestElement = (testElement, realElement) => {
     ? {
         testElement,
         realElement,
-        matchedRatio: matchedCharCount / realElement.length
+        matchedRatio: matchedCharCount / realElement.length,
       }
     : null;
 };

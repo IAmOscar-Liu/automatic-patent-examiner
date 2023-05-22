@@ -642,7 +642,7 @@
 }
 
 .App #main-title::before {
-  content: "專利一組四科 劉克群製作\A 版本: 2023/4/19";
+  content: "專利一組四科 劉克群製作\A 版本: 2023/5/18";
   top: 12px;
 }
 
@@ -1293,11 +1293,20 @@
   color: #f6e3e3;
 }
 
-.App .paragraph-container .paragraph-container-btns button.gotop-btn {
+.App
+  .paragraph-container
+  .paragraph-container-btns
+  button:is(.gotop-btn, .copy-btn) {
   position: absolute;
   right: 0.7em;
   background: #7b3b3b;
   color: #f2eae7;
+}
+
+.App .paragraph-container .paragraph-container-btns button.copy-btn {
+  right: unset;
+  left: 0.7em;
+  background: #447045;
 }
 
 .App .paragraph-container .error {
@@ -1587,4 +1596,145 @@
   padding: 0 5px;
   margin: 0 2px;
   font-size: 1.05em;
+}
+
+.main-body .title-btns {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1em;
+}
+
+.main-body .title-btns button {
+  outline: none;
+  padding: 0.5em 0.9em;
+  background-color: blueviolet;
+  color: blanchedalmond;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  border: blueviolet 3px solid;
+  cursor: pointer;
+  min-width: 20ch;
+}
+
+.main-body .title-btns button:nth-of-type(1) {
+  padding-left: 1.2em;
+  border-top-left-radius: 1000px;
+  border-bottom-left-radius: 1000px;
+}
+
+.main-body .title-btns button:nth-of-type(2) {
+  padding-right: 1.2em;
+  border-top-right-radius: 1000px;
+  border-bottom-right-radius: 1000px;
+}
+
+.main-body .title-btns button.active {
+  background-color: blanchedalmond;
+  color: blueviolet;
+  cursor: default;
+}
+
+.result-v2-title {
+  font-size: 1.5em;
+  background: blue;
+  margin-block: 8px;
+  color: white;
+  padding: 3px 10px;
+  display: flex;
+}
+
+.law-group label:has(> input[type="checkbox"]) {
+  background: rgba(255, 0, 0, 0.3);
+  text-decoration: line-through;
+}
+
+.law-group label:has(> input[type="checkbox"]:checked) {
+  background: rgba(255, 255, 0, 0.3);
+  text-decoration: underline;
+}
+
+.result-v2-title-btns {
+  margin-left: auto;
+  align-self: center;
+}
+
+.result-v2-title-btns > button {
+  outline: none;
+  border: 2px solid #333;
+  margin-inline: 2px;
+  border-radius: 10px;
+  padding: 1px 5px;
+  cursor: pointer;
+  background: chocolate;
+  font-size: 0.7em;
+}
+
+.result-v2-ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.result-v2-li {
+  margin-inline: 8px;
+}
+
+.result-v2-li:only-child {
+  margin-left: 8px;
+}
+
+.result-v2-li:only-child::before {
+  display: none;
+}
+
+.result-v2-only-child {
+  padding-inline: 8px;
+}
+
+.result-v2-lawbody {
+  margin-bottom: 5px;
+  background-color: #e67fe2;
+  color: black;
+  padding: 3px 9px 3px 12px;
+  border-radius: 10px;
+}
+
+.result-v2-prefix {
+  padding-inline: 8px;
+  margin-block: 5px;
+}
+
+.bg-green {
+  color: green;
+}
+
+.bg-blue {
+  color: blue;
+}
+
+.bg-pink {
+  color: rgb(213 9 244);
+}
+
+.symbol-scale {
+  display: inline-block;
+  transform: scale(1.5) translateY(var(--translateY, 0));
+  margin-right: 6px;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }

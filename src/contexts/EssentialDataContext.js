@@ -51,6 +51,14 @@ const EssentialDataContext = ({ children, personalSettings }) => {
       allClaimsDetails: [],
       system: []
     },
+    allErrors_v2: {
+      system_fail: [],
+      no_law: [],
+      law_104: [],
+      law_112_3: [],
+      law_112_5: [],
+      structuredResult: {},
+    },
     readMeOptions: {
       showUsage: false,
       showDetectableErrors: false
@@ -58,6 +66,7 @@ const EssentialDataContext = ({ children, personalSettings }) => {
     globalHighlightOn: true,
     globalHighlightElement: [],
     dbResultMap: {},
+    resultDispType: "new", // "new" | "old"
   });
 
   return (

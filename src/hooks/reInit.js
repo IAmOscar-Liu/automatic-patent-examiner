@@ -17,7 +17,7 @@ export const reInit = async (_essentialData, setEssentialData, payload) => {
     isProcessing: true,
     globalHighlightOn: true,
     globalHighlightElement: [],
-    dbResultMap: {}
+    dbResultMap: {},
   }));
 
   const copyOfDisclosurePara = _essentialData.allDisclosureParagraphDetails;
@@ -56,7 +56,15 @@ export const reInit = async (_essentialData, setEssentialData, payload) => {
     allDisclosureParagraphDetails: [],
     allModeForInventionParagraphDetails: [],
     allClaimsDetails: [],
-    system: []
+    system: [],
+  };
+  essentialData.allErrors_v2 = {
+    system_fail: [],
+    no_law: [],
+    law_104: [],
+    law_112_3: [],
+    law_112_5: [],
+    structuredResult: {},
   };
 
   if (payload.method === "description-of-element") {
@@ -164,9 +172,11 @@ export const reInit = async (_essentialData, setEssentialData, payload) => {
       essentialData,
       copyOfDisclosurePara
     ); // in Reactjs, pass essentialData and setEssentialData
-    essentialData.allModeForInventionParagraphDetails = essentialData.allModeForInventionParagraphDetails.map(
-      (para) => ({ ...para, isCollapse: true })
-    );
+    essentialData.allModeForInventionParagraphDetails =
+      essentialData.allModeForInventionParagraphDetails.map((para) => ({
+        ...para,
+        isCollapse: true,
+      }));
   }
 
   if (payload.method === "allDisclosureParagraphDetails") {
@@ -184,9 +194,11 @@ export const reInit = async (_essentialData, setEssentialData, payload) => {
       essentialData,
       copyOfDisclosurePara
     ); // in Reactjs, pass essentialData and setEssentialData
-    essentialData.allDisclosureParagraphDetails = essentialData.allDisclosureParagraphDetails.map(
-      (para) => ({ ...para, isCollapse: true })
-    );
+    essentialData.allDisclosureParagraphDetails =
+      essentialData.allDisclosureParagraphDetails.map((para) => ({
+        ...para,
+        isCollapse: true,
+      }));
   }
 
   let newClaimPayload = [];
@@ -271,6 +283,6 @@ export const reInit = async (_essentialData, setEssentialData, payload) => {
     isProcessing: false,
     claimPayload: newClaimPayload,
     preserveValues: [...essentialData.preserveValues, ...manuallyAddValues],
-    searchString: ""
+    searchString: "",
   });
 };

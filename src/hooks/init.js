@@ -51,7 +51,7 @@ export const useInit = (
           const newData = {
             latestTS: +d,
             appId: essentialData.applicationNum,
-            appTitle: essentialData.utilityModelTitle
+            appTitle: essentialData.utilityModelTitle,
           };
 
           if (oldSavedApplications[savedDate] === undefined) {
@@ -73,7 +73,7 @@ export const useInit = (
 
           return {
             ...prev,
-            savedApplications: oldSavedApplications
+            savedApplications: oldSavedApplications,
           };
         });
 
@@ -215,6 +215,7 @@ export const useInit = (
         console.log("elementColorMap", essentialData.elementColorMap);
         console.log("allClaimsDetails", essentialData.allClaimsDetails);
         console.log("allErrors", essentialData.allErrors);
+        console.log("allErrors_v2", essentialData.allErrors_v2);
         // For Test Ene
 
         console.log(`Write new data ${new Date().toString().slice(16, 24)}`);
@@ -225,7 +226,7 @@ export const useInit = (
           // utilityModelTitleEn: XMLData.utilityModelTitleDataEn,
           dragAreaMsg: `你的檔案${XMLData.fileName.slice(
             6
-          )}已成功上傳，你可以點擊此處再次選擇檔案。`
+          )}已成功上傳，你可以點擊此處再次選擇檔案。`,
         });
       } else if (!isDataCompleted && XMLData.fileName !== "") {
         // 該 xml 的文件不齊備
@@ -265,7 +266,7 @@ export const useInit = (
           ...prev,
           isProcessing: false,
           missingData,
-          dragAreaMsg
+          dragAreaMsg,
         }));
       }
     }
@@ -308,7 +309,15 @@ export const useInit = (
           allDisclosureParagraphDetails: [],
           allModeForInventionParagraphDetails: [],
           allClaimsDetails: [],
-          system: []
+          system: [],
+        },
+        allErrors_v2: {
+          system_fail: [],
+          no_law: [],
+          law_104: [],
+          law_112_3: [],
+          law_112_5: [],
+          structuredResult: {},
         },
         globalHighlightOn: true,
         globalHighlightElement: [],

@@ -2,7 +2,7 @@ import {
   claimStartReg,
   getAllClaims,
   claimHasOrNoAnd,
-  shouldClaimUseAny
+  shouldClaimUseAny,
 } from "../dict/claimReg";
 import { claimStartTerms } from "../dict/claimStartTerms";
 import { getKeyInRange } from "./otherUtils";
@@ -21,7 +21,7 @@ export const checkCoOperatingClaim = (originalContent, prevClaims, index) => {
       return {
         attaches,
         attemptAttaches,
-        errors
+        errors,
       };
 
     // 如果有引用記載
@@ -49,7 +49,7 @@ export const checkCoOperatingClaim = (originalContent, prevClaims, index) => {
       return {
         attaches,
         attemptAttaches,
-        errors
+        errors,
       };
 
     const claimRanges = getAllClaims(claimMatchString);
@@ -65,7 +65,7 @@ export const checkCoOperatingClaim = (originalContent, prevClaims, index) => {
         message: `引用記載型式未以選擇式為之`,
         errorContent: claimMatchString,
         start: -1000,
-        end: -999
+        end: -999,
       });
     }
 
@@ -83,7 +83,7 @@ export const checkCoOperatingClaim = (originalContent, prevClaims, index) => {
         )}……」，不符合獨立項之引用記載形式`,
         errorContent: errMatch[0],
         start: -1000,
-        end: -999
+        end: -999,
       });
     }
 
@@ -100,7 +100,7 @@ export const checkCoOperatingClaim = (originalContent, prevClaims, index) => {
       return {
         attaches,
         attemptAttaches,
-        errors
+        errors,
       };
 
     attemptAttaches = attaches.slice();
@@ -241,7 +241,7 @@ export const checkCoOperatingClaim = (originalContent, prevClaims, index) => {
               ? `引用記載之請求項${attaches[i]}即為本身，不可依附自己`
               : `引用記載之請求項${attaches[i]}不在該請求項之前或不存在`,
           start,
-          end: start + (attaches[i] + "").toString().length
+          end: start + (attaches[i] + "").toString().length,
         });
         attaches.splice(i, 1);
         continue;
@@ -252,7 +252,7 @@ export const checkCoOperatingClaim = (originalContent, prevClaims, index) => {
         errors.unshift({
           message: `引用記載之請求項${attaches[i]}目前無法分析，先暫且跳過`,
           start: -100,
-          end: -99
+          end: -99,
         });
         attaches.splice(i, 1);
       }
@@ -261,13 +261,13 @@ export const checkCoOperatingClaim = (originalContent, prevClaims, index) => {
     return {
       attemptAttaches,
       attaches,
-      errors
+      errors,
     };
   } catch (e) {
     return {
       attemptAttaches: [],
       attaches: [],
-      errors: []
+      errors: [],
     };
   }
 };
@@ -299,11 +299,13 @@ export const checkParentClaim = (originalContent, prevClaims, index) => {
     const claimMatchString = contentStart.match(claimStartReg)?.[0];
 
     // console.log(claimMatchString);
-    // debugger;
 
     if (!claimMatchString) throw Error("無法判斷此請求項為獨立項或附屬項");
 
     const claimRanges = getAllClaims(claimMatchString);
+
+    // console.log("claimRanges: ", claimRanges);
+    // debugger;
 
     // 未以選擇式為之
     if (
@@ -316,7 +318,7 @@ export const checkParentClaim = (originalContent, prevClaims, index) => {
         message: `多項附屬項未以選擇式為之`,
         errorContent: claimMatchString,
         start: -1001,
-        end: -1000
+        end: -1000,
       });
     }
 
@@ -357,7 +359,7 @@ export const checkParentClaim = (originalContent, prevClaims, index) => {
         )}……」，不符合附屬項之記載形式`,
         errorContent: errMatch[0],
         start: -1000,
-        end: -999
+        end: -999,
       });
     }
 
@@ -475,7 +477,7 @@ export const checkParentClaim = (originalContent, prevClaims, index) => {
               ? `請求項${attaches[i]}即為本身，不可依附自己`
               : `請求項${attaches[i]}不在該請求項之前或不存在`,
           start,
-          end: start + (attaches[i] + "").toString().length
+          end: start + (attaches[i] + "").toString().length,
         });
         attaches.splice(i, 1);
         continue;
@@ -486,7 +488,7 @@ export const checkParentClaim = (originalContent, prevClaims, index) => {
         errors.unshift({
           message: `所依附的請求項${attaches[i]}目前無法分析，先暫且跳過`,
           start: -100,
-          end: -99
+          end: -99,
         });
         attaches.splice(i, 1);
       }
@@ -525,7 +527,7 @@ export const checkParentClaim = (originalContent, prevClaims, index) => {
               type === "direct" ? "直接" : "間接"
             }依附多項附屬項`,
             start,
-            end: start + (attaches[i] + "").toString().length
+            end: start + (attaches[i] + "").toString().length,
           });
           // 討論過後，決定多項附屬項直(間)接依附的請求項保留
           // attaches.splice(i, 1);
@@ -536,7 +538,7 @@ export const checkParentClaim = (originalContent, prevClaims, index) => {
     return {
       attemptAttaches,
       attaches,
-      errors
+      errors,
     };
   } catch (e) {
     throw e.message;
@@ -548,12 +550,12 @@ function checkMultiToMulti(addIndex, prevClaims, type) {
   if (targetClaim.type === "independent" || targetClaim.attaches.length === 0) {
     return {
       result: false,
-      type
+      type,
     };
   } else if (targetClaim.attaches.length > 1) {
     return {
       result: true,
-      type
+      type,
     };
   } else {
     return checkMultiToMulti(targetClaim.attaches[0], prevClaims, "indirect");
@@ -594,10 +596,9 @@ export const getAllClaimPaths = (claims, currentClaim) => {
 
   let paths = [];
   currentClaim.attaches.forEach((attach) => {
-    const newFoundPath = getAllClaimPaths(
-      claims,
-      claims[attach - 1]
-    ).map((path) => [attach, ...path]);
+    const newFoundPath = getAllClaimPaths(claims, claims[attach - 1]).map(
+      (path) => [attach, ...path]
+    );
     paths.push(...newFoundPath);
   });
 

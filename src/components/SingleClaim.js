@@ -11,7 +11,7 @@ import {
   triggerPopup,
   triggerToggleBtnColor,
   triggerToggleErrorBtnColor,
-  triggerToggleModifiedBtnColor
+  triggerToggleModifiedBtnColor,
 } from "../utils/trigger/claim";
 import ClaimEditingForm from "./ClaimEditingForm";
 import ClaimPopup from "./ClaimPopup";
@@ -42,7 +42,7 @@ const SingleClaim = ({
   handleSaveAll,
   searchString,
   globalHighlightOn,
-  globalHighlightElement
+  globalHighlightElement,
 }) => {
   const divRef = useRef(null);
   const searchStringPrev = useRef(searchString);
@@ -104,7 +104,7 @@ const SingleClaim = ({
   const toggleBtnColor = (key) => {
     if (essentialData.personalSettings.synchronizeHighlight) {
       const prevGlobalHighlightElement = [
-        ...essentialData.globalHighlightElement
+        ...essentialData.globalHighlightElement,
       ];
 
       if (prevGlobalHighlightElement.find((el) => el === key)) {
@@ -113,13 +113,13 @@ const SingleClaim = ({
           globalHighlightOn: prevGlobalHighlightElement.length !== 1,
           globalHighlightElement: prevGlobalHighlightElement.filter(
             (g) => g !== key
-          )
+          ),
         }));
       } else {
         setEssentialData((prev) => ({
           ...prev,
           globalHighlightOn: true,
-          globalHighlightElement: [...prevGlobalHighlightElement, key]
+          globalHighlightElement: [...prevGlobalHighlightElement, key],
         }));
       }
     } else {
@@ -149,8 +149,8 @@ const SingleClaim = ({
           ...myReduceMatches,
           [key]: {
             ...myReduceMatches[key],
-            clicked: !myReduceMatches[key].clicked
-          }
+            clicked: !myReduceMatches[key].clicked,
+          },
         });
       }
       if (myReduceUsedElements[key]) {
@@ -158,8 +158,8 @@ const SingleClaim = ({
           ...myReduceUsedElements,
           [key]: {
             ...myReduceUsedElements[key],
-            clicked: !myReduceUsedElements[key].clicked
-          }
+            clicked: !myReduceUsedElements[key].clicked,
+          },
         });
       }
     }
@@ -186,8 +186,8 @@ const SingleClaim = ({
       key,
       {
         ...myReduceMatches[key],
-        clicked: !myReduceMatches[key].clicked
-      }
+        clicked: !myReduceMatches[key].clicked,
+      },
     ]);
     setMyReduceMatches(Object.fromEntries(arrOfMyReduceMatches));
     const arrOfMyReduceUsedElements = Object.keys(myReduceUsedElements).map(
@@ -197,8 +197,8 @@ const SingleClaim = ({
           ...myReduceUsedElements[key],
           clicked: myReduceMatches[key]
             ? !myReduceUsedElements[key].clicked
-            : myReduceUsedElements[key].clicked
-        }
+            : myReduceUsedElements[key].clicked,
+        },
       ]
     );
     setMyReduceUsedElements(Object.fromEntries(arrOfMyReduceUsedElements));
@@ -215,8 +215,8 @@ const SingleClaim = ({
       ...myReduceNonMatches,
       [key]: {
         ...myReduceNonMatches[key],
-        clicked: !myReduceNonMatches[key].clicked
-      }
+        clicked: !myReduceNonMatches[key].clicked,
+      },
     });
   };
 
@@ -233,8 +233,8 @@ const SingleClaim = ({
         key,
         {
           ...myReduceNonMatches[key],
-          clicked: !myReduceNonMatches[key].clicked
-        }
+          clicked: !myReduceNonMatches[key].clicked,
+        },
       ]
     );
     setMyReduceNonMatches(Object.fromEntries(arrOfMyReduceNonMatches));
@@ -251,8 +251,8 @@ const SingleClaim = ({
       ...myReduceModifiedMatches,
       [key]: {
         ...myReduceModifiedMatches[key],
-        clicked: !myReduceModifiedMatches[key].clicked
-      }
+        clicked: !myReduceModifiedMatches[key].clicked,
+      },
     });
   };
 
@@ -289,7 +289,7 @@ const SingleClaim = ({
             (globalHighlightElement.length === 0 ||
               globalHighlightElement.find((g) => g === group)),
           isOK,
-          keys: keys ? keys : []
+          keys: keys ? keys : [],
         };
       } else if (keys) {
         let newKeys = reduceMatches[group].keys.slice();
@@ -315,7 +315,7 @@ const SingleClaim = ({
             globalHighlightOn &&
             (globalHighlightElement.length === 0 ||
               globalHighlightElement.find((g) => g === group)),
-          keys: keys ? keys : []
+          keys: keys ? keys : [],
         };
       } else if (keys) {
         let newKeys = reduceUsedElements[group].keys.slice();
@@ -337,7 +337,7 @@ const SingleClaim = ({
           item,
           value,
           clicked: true,
-          keys: keys ? keys : []
+          keys: keys ? keys : [],
         };
       } else if (keys) {
         let newKeys = reduceNonMatches[group].keys.slice();
@@ -361,7 +361,7 @@ const SingleClaim = ({
               value,
               item,
               clicked: true,
-              keys: keys ? keys : []
+              keys: keys ? keys : [],
             };
           } else if (keys) {
             let newKeys = reduceModifiedMatches[group].keys.slice();
@@ -486,13 +486,13 @@ const SingleClaim = ({
     });
     let insertLists = tagLists.map((tagList) => ({
       start: tagList.index,
-      content: tagList[0]
+      content: tagList[0],
     }));
 
     const searchStringMatches = [
       ...nonModifiedClaim.matchAll(
         RegExp(searchString.split("").join("@?"), "g")
-      )
+      ),
     ];
     setNumOfFoundedStr(searchStringMatches.length);
 
@@ -503,7 +503,7 @@ const SingleClaim = ({
         }
         insertLists.push({
           start: j,
-          content: `<strong class='search-highlight'>${nonModifiedClaim[j]}</strong>`
+          content: `<strong class='search-highlight'>${nonModifiedClaim[j]}</strong>`,
         });
       }
     });
@@ -533,7 +533,7 @@ const SingleClaim = ({
     globalHighlightOn,
     globalHighlightElement,
     essentialData.personalSettings.showClaimElementKey,
-    essentialData.personalSettings.synchronizeHighlight
+    essentialData.personalSettings.synchronizeHighlight,
   ]);
 
   const handleUpdateMatch = (updateMatch) => {
@@ -562,7 +562,7 @@ const SingleClaim = ({
           group: stringToUnicode(updateMatch.fullValue || updateMatch.value),
           keyEnd: match.hasOuterKey ? match.keyEnd : null,
           keyStart: match.hasOuterKey ? match.keyStart : null,
-          keys: match.hasOuterKey ? match.keys : null
+          keys: match.hasOuterKey ? match.keys : null,
         };
       }
       return match;
@@ -591,7 +591,7 @@ const SingleClaim = ({
           usedElements,
           // preUsedElementsNonUsed,
           preUsedElementsNonUsed: modifiedPreUsedElementsNonUsed,
-          errors
+          errors,
         },
         content,
         elementColorMap
@@ -616,7 +616,7 @@ const SingleClaim = ({
         setPopupItem,
         setPopupFullValue,
         setPopupAvailableContent,
-        toggleIsPopupOpen
+        toggleIsPopupOpen,
       });
 
     if (Object.keys(myReduceMatches).length > 0) {
@@ -669,7 +669,7 @@ const SingleClaim = ({
   }, [
     myReduceMatches,
     copyOfSingleMatches,
-    essentialData.personalSettings.showClaimElementKey
+    essentialData.personalSettings.showClaimElementKey,
   ]);
 
   useEffect(() => {
@@ -711,7 +711,7 @@ const SingleClaim = ({
   }, [
     myReduceUsedElements,
     copyOfSingleMatches,
-    essentialData.personalSettings.showClaimElementKey
+    essentialData.personalSettings.showClaimElementKey,
   ]);
 
   useEffect(() => {
@@ -731,7 +731,7 @@ const SingleClaim = ({
         setPopupItem,
         setPopupFullValue,
         setPopupAvailableContent,
-        toggleIsPopupOpen
+        toggleIsPopupOpen,
       });
 
     if (Object.keys(myReduceNonMatches).length > 0) {
@@ -779,7 +779,7 @@ const SingleClaim = ({
         setPopupItem,
         setPopupFullValue,
         setPopupAvailableContent,
-        toggleIsPopupOpen
+        toggleIsPopupOpen,
       });
 
     if (Object.keys(myReduceModifiedMatches).length > 0) {
@@ -998,7 +998,7 @@ const SingleClaim = ({
             <p
               style={{
                 color: "rgb(130 45 45)",
-                fontWeight: "bold"
+                fontWeight: "bold",
               }}
             >
               &#9733;連接資料庫以尋找請求項之構件
@@ -1010,7 +1010,7 @@ const SingleClaim = ({
               onChange={(e) =>
                 setShowControlBtns((prev) => ({
                   ...prev,
-                  [e.target.id]: !prev[e.target.id]
+                  [e.target.id]: !prev[e.target.id],
                 }))
               }
               id={`paragraph-${index}-corrects-btn`}
@@ -1028,7 +1028,7 @@ const SingleClaim = ({
                 style={{
                   color: "rgb(68 112 69)",
                   fontWeight: "bold",
-                  marginLeft: "2.5vw"
+                  marginLeft: "2.5vw",
                 }}
               >
                 &#9733;說明書、申請專利範圍之所有構件皆同步標註
@@ -1052,7 +1052,7 @@ const SingleClaim = ({
                   background: myReduceMatches[key].clicked
                     ? (elementColorMap[key] && elementColorMap[key].color) ||
                       "transparent"
-                    : "inherit"
+                    : "inherit",
                 }}
                 key={key}
               >
@@ -1069,7 +1069,7 @@ const SingleClaim = ({
               <button
                 style={{
                   background: "rgb(68, 112, 69)",
-                  borderRadius: 1000000
+                  borderRadius: 1000000,
                 }}
                 onClick={toggleAllBtnColor}
               >
@@ -1079,7 +1079,7 @@ const SingleClaim = ({
                   style={{
                     width: 25,
                     height: 20,
-                    transform: "translateY(3px)"
+                    transform: "translateY(3px)",
                   }}
                 />
               </button>
@@ -1094,13 +1094,13 @@ const SingleClaim = ({
                     fontSize: "1.1em",
                     alignSelf: "flex-end",
                     marginLeft: "auto",
-                    marginRight: "3vw"
+                    marginRight: "3vw",
                   }}
                   onClick={() =>
                     setEssentialData((prev) => ({
                       ...prev,
                       globalHighlightOn: true,
-                      globalHighlightElement: []
+                      globalHighlightElement: [],
                     }))
                   }
                 >
@@ -1118,12 +1118,12 @@ const SingleClaim = ({
                     fontSize: "1.1em",
                     alignSelf: "flex-end",
                     marginLeft: "auto",
-                    marginRight: "3vw"
+                    marginRight: "3vw",
                   }}
                   onClick={() =>
                     setEssentialData((prev) => ({
                       ...prev,
-                      globalHighlightOn: false
+                      globalHighlightOn: false,
                     }))
                   }
                 >
@@ -1138,7 +1138,7 @@ const SingleClaim = ({
               onChange={(e) =>
                 setShowControlBtns((prev) => ({
                   ...prev,
-                  [e.target.id]: !prev[e.target.id]
+                  [e.target.id]: !prev[e.target.id],
                 }))
               }
               id={`paragraph-${index}-errors-btn`}
@@ -1172,7 +1172,7 @@ const SingleClaim = ({
                 style={{
                   background: myReduceNonMatches[key].clicked
                     ? "rgb(255, 0, 0)"
-                    : "inherit"
+                    : "inherit",
                 }}
                 key={key}
               >
@@ -1188,7 +1188,7 @@ const SingleClaim = ({
             <button
               style={{
                 background: "rgb(255, 0, 0)",
-                borderRadius: 1000000
+                borderRadius: 1000000,
               }}
               onClick={toggleAllErrorBtnColor}
             >
@@ -1206,7 +1206,7 @@ const SingleClaim = ({
               onChange={(e) =>
                 setShowControlBtns((prev) => ({
                   ...prev,
-                  [e.target.id]: !prev[e.target.id]
+                  [e.target.id]: !prev[e.target.id],
                 }))
               }
               id={`paragraph-${index}-modify-btn`}
@@ -1237,7 +1237,7 @@ const SingleClaim = ({
                 style={{
                   background: myReduceModifiedMatches[key].clicked
                     ? "hotpink"
-                    : "inherit"
+                    : "inherit",
                 }}
               >
                 {myReduceModifiedMatches[key].item}
@@ -1309,14 +1309,14 @@ const SingleClaim = ({
               style={{
                 minWidth: 300,
                 display: "block",
-                marginBottom: ".3em"
+                marginBottom: ".3em",
               }}
             >
               請求項編號:{" "}
               <input
                 style={{
                   fontSize: "0.9em",
-                  width: 100
+                  width: 100,
                 }}
                 type="text"
                 value={editingZoneNumlValue}
@@ -1396,6 +1396,14 @@ const SingleClaim = ({
             }
           >
             Go Top
+          </button>
+          <button
+            className="copy-btn"
+            onClick={() =>
+              navigator.clipboard.writeText(content.replaceAll("@##@", "\n"))
+            }
+          >
+            複製內容
           </button>
         </div>
       </section>

@@ -12,7 +12,7 @@ import {
   triggerToggleFigureBtnColor,
   triggerTogglePotentialErrorBtnColor,
   triggerToggleWrongFigureBtnColor,
-  triggerToggleWrongWordBtnColor
+  triggerToggleWrongWordBtnColor,
 } from "../utils/trigger/paragraph";
 
 const SingleParagraph = ({
@@ -40,7 +40,7 @@ const SingleParagraph = ({
   preSavedGeneral,
   searchString,
   globalHighlightOn,
-  globalHighlightElement
+  globalHighlightElement,
 }) => {
   const divRef = useRef(null);
   const searchStringPrev = useRef(searchString);
@@ -90,7 +90,7 @@ const SingleParagraph = ({
   const toggleBtnColor = (key) => {
     if (essentialData.personalSettings.synchronizeHighlight) {
       const prevGlobalHighlightElement = [
-        ...essentialData.globalHighlightElement
+        ...essentialData.globalHighlightElement,
       ];
 
       if (prevGlobalHighlightElement.find((el) => el === key)) {
@@ -99,13 +99,13 @@ const SingleParagraph = ({
           globalHighlightOn: prevGlobalHighlightElement.length !== 1,
           globalHighlightElement: prevGlobalHighlightElement.filter(
             (g) => g !== key
-          )
+          ),
         }));
       } else {
         setEssentialData((prev) => ({
           ...prev,
           globalHighlightOn: true,
-          globalHighlightElement: [...prevGlobalHighlightElement, key]
+          globalHighlightElement: [...prevGlobalHighlightElement, key],
         }));
       }
     } else {
@@ -119,8 +119,8 @@ const SingleParagraph = ({
         ...myReduceCorrectKeys,
         [key]: {
           ...myReduceCorrectKeys[key],
-          clicked: !myReduceCorrectKeys[key].clicked
-        }
+          clicked: !myReduceCorrectKeys[key].clicked,
+        },
       });
     }
   };
@@ -138,8 +138,8 @@ const SingleParagraph = ({
         key,
         {
           ...myReduceCorrectKeys[key],
-          clicked: !myReduceCorrectKeys[key].clicked
-        }
+          clicked: !myReduceCorrectKeys[key].clicked,
+        },
       ]
     );
     setMyReduceCorrectKeys(Object.fromEntries(arrOfMyReduceCorrectKeys));
@@ -154,8 +154,8 @@ const SingleParagraph = ({
       ...myReduceWrongKeys,
       [key]: {
         ...myReduceWrongKeys[key],
-        clicked: !myReduceWrongKeys[key].clicked
-      }
+        clicked: !myReduceWrongKeys[key].clicked,
+      },
     });
   };
 
@@ -171,8 +171,8 @@ const SingleParagraph = ({
       key,
       {
         ...myReduceWrongKeys[key],
-        clicked: !myReduceWrongKeys[key].clicked
-      }
+        clicked: !myReduceWrongKeys[key].clicked,
+      },
     ]);
     setMyReduceWrongKeys(Object.fromEntries(arrOfMyReduceWrongKeys));
   };
@@ -188,8 +188,8 @@ const SingleParagraph = ({
       ...myReduceWrongWordKeys,
       [key]: {
         ...myReduceWrongWordKeys[key],
-        clicked: !myReduceWrongWordKeys[key].clicked
-      }
+        clicked: !myReduceWrongWordKeys[key].clicked,
+      },
     });
   };
 
@@ -206,8 +206,8 @@ const SingleParagraph = ({
         key,
         {
           ...myReduceWrongWordKeys[key],
-          clicked: !myReduceWrongWordKeys[key].clicked
-        }
+          clicked: !myReduceWrongWordKeys[key].clicked,
+        },
       ]
     );
     setMyReduceWrongWordKeys(Object.fromEntries(arrOfMyReduceWrongWordKeys));
@@ -224,8 +224,8 @@ const SingleParagraph = ({
       ...myReduceFigureKeys,
       [key]: {
         ...myReduceFigureKeys[key],
-        clicked: !myReduceFigureKeys[key].clicked
-      }
+        clicked: !myReduceFigureKeys[key].clicked,
+      },
     });
   };
 
@@ -242,8 +242,8 @@ const SingleParagraph = ({
         key,
         {
           ...myReduceFigureKeys[key],
-          clicked: !myReduceFigureKeys[key].clicked
-        }
+          clicked: !myReduceFigureKeys[key].clicked,
+        },
       ]
     );
     setMyReduceFigureKeys(Object.fromEntries(arrOfMyReduceFigureKeys));
@@ -260,8 +260,8 @@ const SingleParagraph = ({
       ...myReduceWrongFigureKeys,
       [key]: {
         ...myReduceWrongFigureKeys[key],
-        clicked: !myReduceWrongFigureKeys[key].clicked
-      }
+        clicked: !myReduceWrongFigureKeys[key].clicked,
+      },
     });
   };
 
@@ -279,8 +279,8 @@ const SingleParagraph = ({
       key,
       {
         ...myReduceWrongFigureKeys[key],
-        clicked: !myReduceWrongFigureKeys[key].clicked
-      }
+        clicked: !myReduceWrongFigureKeys[key].clicked,
+      },
     ]);
     setMyReduceWrongFigureKeys(
       Object.fromEntries(arrOfMyReduceWrongFigureKeys)
@@ -298,8 +298,8 @@ const SingleParagraph = ({
       ...myReduceAboriginalWordKeys,
       [key]: {
         ...myReduceAboriginalWordKeys[key],
-        clicked: !myReduceAboriginalWordKeys[key].clicked
-      }
+        clicked: !myReduceAboriginalWordKeys[key].clicked,
+      },
     });
   };
 
@@ -317,8 +317,8 @@ const SingleParagraph = ({
       key,
       {
         ...myReduceAboriginalWordKeys[key],
-        clicked: !myReduceAboriginalWordKeys[key].clicked
-      }
+        clicked: !myReduceAboriginalWordKeys[key].clicked,
+      },
     ]);
     setMyReduceAboriginalWordKeys(
       Object.fromEntries(arrOfMyReduceAboriginalWordKeys)
@@ -339,8 +339,8 @@ const SingleParagraph = ({
       ...myReducePotentialWrongKeys,
       [key]: {
         ...myReducePotentialWrongKeys[key],
-        clicked: !myReducePotentialWrongKeys[key].clicked
-      }
+        clicked: !myReducePotentialWrongKeys[key].clicked,
+      },
     });
   };
 
@@ -361,8 +361,8 @@ const SingleParagraph = ({
       key,
       {
         ...myReducePotentialWrongKeys[key],
-        clicked: !myReducePotentialWrongKeys[key].clicked
-      }
+        clicked: !myReducePotentialWrongKeys[key].clicked,
+      },
     ]);
     setMyReducePotentialWrongKeys(
       Object.fromEntries(arrOfMyReducePotentialErrorKeys)
@@ -385,7 +385,7 @@ const SingleParagraph = ({
       if (!reduceFigureKeys[figureKey.group]) {
         reduceFigureKeys[figureKey.group] = {
           ...figureKey,
-          clicked: true
+          clicked: true,
         };
       }
     });
@@ -395,7 +395,7 @@ const SingleParagraph = ({
       if (!reduceWrongFigureKeys[wrongFigureKey.group]) {
         reduceWrongFigureKeys[wrongFigureKey.group] = {
           ...wrongFigureKey,
-          clicked: true
+          clicked: true,
         };
       }
     });
@@ -419,7 +419,7 @@ const SingleParagraph = ({
               clicked:
                 globalHighlightOn &&
                 (globalHighlightElement.length === 0 ||
-                  globalHighlightElement.find((g) => g === correctKey.group))
+                  globalHighlightElement.find((g) => g === correctKey.group)),
             };
           }
         });
@@ -433,7 +433,7 @@ const SingleParagraph = ({
           clicked:
             globalHighlightOn &&
             (globalHighlightElement.length === 0 ||
-              globalHighlightElement.find((g) => g === correctKey.group))
+              globalHighlightElement.find((g) => g === correctKey.group)),
         };
       }
     });
@@ -453,7 +453,7 @@ const SingleParagraph = ({
                   .filter((k) => k !== "")
                   .join("、"),
               wrongKeys: reduceWrongKeys[wrongKey.group].wrongKeys,
-              clicked: true
+              clicked: true,
             };
           }
         });
@@ -463,7 +463,7 @@ const SingleParagraph = ({
           value:
             wrongKey.item +
             wrongKey.wrongKeys.filter((k) => k !== "").join("、"),
-          clicked: true
+          clicked: true,
         };
       }
     });
@@ -481,23 +481,21 @@ const SingleParagraph = ({
             reducePotentialWrongKeys[potentialWrongKey.group].keys.push(key);
             reducePotentialWrongKeys[potentialWrongKey.group] = {
               ...potentialWrongKey,
-              value:
-                potentialWrongKey.item /*+
+              value: potentialWrongKey.item /*+
                 reducePotentialWrongKeys[potentialWrongKey.group].keys
                   .filter((k) => k !== "")
                   .join("、")*/,
               keys: reducePotentialWrongKeys[potentialWrongKey.group].keys,
-              clicked: true
+              clicked: true,
             };
           }
         });
       } else {
         reducePotentialWrongKeys[potentialWrongKey.group] = {
           ...potentialWrongKey,
-          value:
-            potentialWrongKey.item /*+
+          value: potentialWrongKey.item /*+
             potentialWrongKey.keys.filter((k) => k !== "").join("、")*/,
-          clicked: true
+          clicked: true,
         };
       }
     });
@@ -507,7 +505,7 @@ const SingleParagraph = ({
       if (!reduceWrongWordKeys[wrongWordKey.group]) {
         reduceWrongWordKeys[wrongWordKey.group] = {
           ...wrongWordKey,
-          clicked: true
+          clicked: true,
         };
       }
     });
@@ -517,7 +515,7 @@ const SingleParagraph = ({
       if (!reduceAboriginalWordKeys[aboriginalWordKey.group]) {
         reduceAboriginalWordKeys[aboriginalWordKey.group] = {
           ...aboriginalWordKey,
-          clicked: true
+          clicked: true,
         };
       }
     });
@@ -604,13 +602,13 @@ const SingleParagraph = ({
     });
     let insertLists = tagLists.map((tagList) => ({
       start: tagList.index,
-      content: tagList[0]
+      content: tagList[0],
     }));
 
     const searchStringMatches = [
       ...nonModifiedParagraph.matchAll(
         RegExp(searchString.split("").join("@?"), "g")
-      )
+      ),
     ];
     setNumOfFoundedStr(searchStringMatches.length);
 
@@ -621,7 +619,7 @@ const SingleParagraph = ({
         }
         insertLists.push({
           start: j,
-          content: `<strong class='search-highlight'>${nonModifiedParagraph[j]}</strong>`
+          content: `<strong class='search-highlight'>${nonModifiedParagraph[j]}</strong>`,
         });
       }
     });
@@ -647,7 +645,7 @@ const SingleParagraph = ({
     general,
     globalHighlightOn,
     globalHighlightElement,
-    essentialData.personalSettings.synchronizeHighlight
+    essentialData.personalSettings.synchronizeHighlight,
   ]);
 
   useEffect(() => {
@@ -894,7 +892,7 @@ const SingleParagraph = ({
               onChange={(e) =>
                 setShowControlBtns((prev) => ({
                   ...prev,
-                  [e.target.id]: !prev[e.target.id]
+                  [e.target.id]: !prev[e.target.id],
                 }))
               }
               id={`paragraph-${index}-corrects-btn`}
@@ -912,7 +910,7 @@ const SingleParagraph = ({
                 style={{
                   color: "rgb(68 112 69)",
                   fontWeight: "bold",
-                  marginLeft: "2.5vw"
+                  marginLeft: "2.5vw",
                 }}
               >
                 &#9733;說明書、申請專利範圍之所有構件皆同步highlight
@@ -935,7 +933,7 @@ const SingleParagraph = ({
                 style={{
                   background: myReduceCorrectKeys[key].clicked
                     ? elementColorMap[key].color
-                    : "inherit"
+                    : "inherit",
                 }}
                 key={key}
                 id={`para-${index}-${key}`}
@@ -947,7 +945,7 @@ const SingleParagraph = ({
               <button
                 style={{
                   background: "rgb(68, 112, 69)",
-                  borderRadius: 1000000
+                  borderRadius: 1000000,
                 }}
                 onClick={toggleAllBtnColor}
               >
@@ -957,7 +955,7 @@ const SingleParagraph = ({
                   style={{
                     width: 25,
                     height: 20,
-                    transform: "translateY(3px)"
+                    transform: "translateY(3px)",
                   }}
                 />
               </button>
@@ -972,13 +970,13 @@ const SingleParagraph = ({
                     fontSize: "1.1em",
                     alignSelf: "flex-end",
                     marginLeft: "auto",
-                    marginRight: "3vw"
+                    marginRight: "3vw",
                   }}
                   onClick={() =>
                     setEssentialData((prev) => ({
                       ...prev,
                       globalHighlightOn: true,
-                      globalHighlightElement: []
+                      globalHighlightElement: [],
                     }))
                   }
                 >
@@ -996,12 +994,12 @@ const SingleParagraph = ({
                     fontSize: "1.1em",
                     alignSelf: "flex-end",
                     marginLeft: "auto",
-                    marginRight: "3vw"
+                    marginRight: "3vw",
                   }}
                   onClick={() =>
                     setEssentialData((prev) => ({
                       ...prev,
-                      globalHighlightOn: false
+                      globalHighlightOn: false,
                     }))
                   }
                 >
@@ -1016,7 +1014,7 @@ const SingleParagraph = ({
               onChange={(e) =>
                 setShowControlBtns((prev) => ({
                   ...prev,
-                  [e.target.id]: !prev[e.target.id]
+                  [e.target.id]: !prev[e.target.id],
                 }))
               }
               id={`paragraph-${index}-errors-btn`}
@@ -1044,7 +1042,9 @@ const SingleParagraph = ({
               <button
                 onClick={() => toggleErrorBtnColor(key)}
                 style={{
-                  background: myReduceWrongKeys[key].clicked ? "red" : "inherit"
+                  background: myReduceWrongKeys[key].clicked
+                    ? "red"
+                    : "inherit",
                 }}
                 key={key}
               >
@@ -1054,7 +1054,7 @@ const SingleParagraph = ({
             <button
               style={{
                 background: "rgb(255, 0, 0)",
-                borderRadius: 1000000
+                borderRadius: 1000000,
               }}
               onClick={toggleAllErrorBtnColor}
             >
@@ -1072,7 +1072,7 @@ const SingleParagraph = ({
               onChange={(e) =>
                 setShowControlBtns((prev) => ({
                   ...prev,
-                  [e.target.id]: !prev[e.target.id]
+                  [e.target.id]: !prev[e.target.id],
                 }))
               }
               id={`paragraph-${index}-potentialErrors-btn`}
@@ -1104,7 +1104,7 @@ const SingleParagraph = ({
                 style={{
                   background: myReducePotentialWrongKeys[key].clicked
                     ? "rgb(202 117 117)"
-                    : "inherit"
+                    : "inherit",
                 }}
                 key={key}
               >
@@ -1114,7 +1114,7 @@ const SingleParagraph = ({
             <button
               style={{
                 background: "rgb(202 117 117)",
-                borderRadius: 1000000
+                borderRadius: 1000000,
               }}
               onClick={toggleAllPotentialErrorBtnColor}
             >
@@ -1132,7 +1132,7 @@ const SingleParagraph = ({
               onChange={(e) =>
                 setShowControlBtns((prev) => ({
                   ...prev,
-                  [e.target.id]: !prev[e.target.id]
+                  [e.target.id]: !prev[e.target.id],
                 }))
               }
               id={`paragraph-${index}-word-errors-btn`}
@@ -1164,7 +1164,7 @@ const SingleParagraph = ({
                 style={{
                   background: myReduceWrongWordKeys[key].clicked
                     ? "red"
-                    : "inherit"
+                    : "inherit",
                 }}
                 key={key}
               >
@@ -1189,7 +1189,7 @@ const SingleParagraph = ({
               onChange={(e) =>
                 setShowControlBtns((prev) => ({
                   ...prev,
-                  [e.target.id]: !prev[e.target.id]
+                  [e.target.id]: !prev[e.target.id],
                 }))
               }
               id={`paragraph-${index}-figure-btn`}
@@ -1219,7 +1219,7 @@ const SingleParagraph = ({
                 style={{
                   background: myReduceFigureKeys[key].clicked
                     ? "#93ad64"
-                    : "inherit"
+                    : "inherit",
                 }}
                 key={key}
               >
@@ -1244,7 +1244,7 @@ const SingleParagraph = ({
               onChange={(e) =>
                 setShowControlBtns((prev) => ({
                   ...prev,
-                  [e.target.id]: !prev[e.target.id]
+                  [e.target.id]: !prev[e.target.id],
                 }))
               }
               id={`paragraph-${index}-wrong-figure-btn`}
@@ -1276,7 +1276,7 @@ const SingleParagraph = ({
                 style={{
                   background: myReduceWrongFigureKeys[key].clicked
                     ? "red"
-                    : "inherit"
+                    : "inherit",
                 }}
                 key={key}
               >
@@ -1301,7 +1301,7 @@ const SingleParagraph = ({
               onChange={(e) =>
                 setShowControlBtns((prev) => ({
                   ...prev,
-                  [e.target.id]: !prev[e.target.id]
+                  [e.target.id]: !prev[e.target.id],
                 }))
               }
               id={`paragraph-${index}-aboriginals-btn`}
@@ -1333,7 +1333,7 @@ const SingleParagraph = ({
                 style={{
                   background: myReduceAboriginalWordKeys[key].clicked
                     ? "rgb(188 174 174)"
-                    : "inherit"
+                    : "inherit",
                 }}
                 key={key}
               >
@@ -1375,14 +1375,14 @@ const SingleParagraph = ({
               style={{
                 minWidth: 300,
                 display: "block",
-                marginBottom: ".3em"
+                marginBottom: ".3em",
               }}
             >
               段落編號:{" "}
               <input
                 style={{
                   fontSize: "0.9em",
-                  width: 100
+                  width: 100,
                 }}
                 type="text"
                 value={editingZoneGeneralValue}
@@ -1393,7 +1393,7 @@ const SingleParagraph = ({
               style={{
                 width: "100%",
                 height: 150,
-                fontSize: "1.1em"
+                fontSize: "1.1em",
               }}
               value={editingZoneValue}
               onChange={(e) => setEditingZoneValue(e.target.value)}
@@ -1465,6 +1465,12 @@ const SingleParagraph = ({
             }
           >
             Go Top
+          </button>
+          <button
+            className="copy-btn"
+            onClick={() => navigator.clipboard.writeText(content)}
+          >
+            複製內容
           </button>
         </div>
       </section>

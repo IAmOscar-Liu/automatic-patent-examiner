@@ -53,19 +53,24 @@ export const modifySingleParagraph = (
       wrongs: [],
       potentialErrors: [],
       wrongWords: [],
-      aboriginalWords: []
+      aboriginalWords: [],
     };
 
     for (let i = matches.length - 1; i >= 0; i--) {
       if (matches[i].type === "figure") {
-        // console.log(matches[i]);
-        // debugger;
         const start = matches[i].index;
         const end = matches[i].index + matches[i][0].length;
         const figs = [...matches[i].keys].reverse();
         let copyParagraph = paragraph;
         let hasWrongFigs = false;
         let wrongFigNotInText = false;
+
+        /*
+        console.log(matches[i]);
+        console.log("start: ", start, " end: ", end);
+        console.log("figs: ", figs);
+        debugger;
+        */
 
         figs.forEach((fig) => {
           if (allDrawings.find((drawing) => drawing.fig === fig)) {
@@ -88,19 +93,30 @@ export const modifySingleParagraph = (
             ) {
               // 圖X 有出現在文字中
               const figMatch_1 = matches[i][0].match(
-                RegExp(
-                  `圖?\\(?${trimFig(fig.slice(1))}\\)?(?!.*${trimFig(
-                    fig.slice(1)
-                  )})`
-                )
+                // RegExp(
+                //   `圖?\\(?${trimFig(fig.slice(1))}\\)?(?!.*${trimFig(
+                //     fig.slice(1)
+                //   )})`
+                // )
+                RegExp(`圖?\\(?${trimFig(fig.slice(1))}\\)?`)
               );
               const figMatch_2 = matches[i][0].match(
-                RegExp(
-                  `第?\\(?${trimFig(fig.slice(1))}\\)?(?!.*${trimFig(
-                    fig.slice(1)
-                  )})圖?`
-                )
+                // RegExp(
+                //   `第?\\(?${trimFig(fig.slice(1))}\\)?(?!.*${trimFig(
+                //     fig.slice(1)
+                //   )})圖?`
+                // )
+                RegExp(`第?\\(?${trimFig(fig.slice(1))}\\)?圖?`)
               );
+              // test
+              /*
+              if (fig === "圖1") {
+                console.log("figMatch_1: ", figMatch_1);
+                console.log("figMatch_2: ", figMatch_2);
+                debugger;
+              }
+              */
+              // test
               const figMatch =
                 figMatch_1[0].length > figMatch_2[0].length
                   ? figMatch_1
@@ -110,18 +126,18 @@ export const modifySingleParagraph = (
               copyParagraph = [
                 copyParagraph.slice(0, figEnd),
                 `</i>`,
-                copyParagraph.slice(figEnd)
+                copyParagraph.slice(figEnd),
               ].join("");
               copyParagraph = [
                 copyParagraph.slice(0, figStart),
                 `<i class='figure f-${stringToUnicode(fig)}'>`,
-                copyParagraph.slice(figStart)
+                copyParagraph.slice(figStart),
               ].join("");
               paragraphMatch.figures.unshift({
                 group: stringToUnicode(fig),
                 fig,
                 start: figStart,
-                end: figEnd
+                end: figEnd,
               });
             } else {
               // 圖X 未出現在文字中
@@ -129,7 +145,7 @@ export const modifySingleParagraph = (
                 group: stringToUnicode(fig),
                 fig,
                 start,
-                end
+                end,
               });
             }
 
@@ -157,18 +173,20 @@ export const modifySingleParagraph = (
           ) {
             // 圖X 有出現在文字中
             const figMatch_1 = matches[i][0].match(
-              RegExp(
-                `圖?\\(?${trimFig(fig.slice(1))}\\)?(?!.*${trimFig(
-                  fig.slice(1)
-                )})`
-              )
+              // RegExp(
+              //   `圖?\\(?${trimFig(fig.slice(1))}\\)?(?!.*${trimFig(
+              //     fig.slice(1)
+              //   )})`
+              // )
+              RegExp(`圖?\\(?${trimFig(fig.slice(1))}\\)?`)
             );
             const figMatch_2 = matches[i][0].match(
-              RegExp(
-                `第?\\(?${trimFig(fig.slice(1))}\\)?(?!.*${trimFig(
-                  fig.slice(1)
-                )})圖?`
-              )
+              // RegExp(
+              //   `第?\\(?${trimFig(fig.slice(1))}\\)?(?!.*${trimFig(
+              //     fig.slice(1)
+              //   )})圖?`
+              // )
+              RegExp(`第?\\(?${trimFig(fig.slice(1))}\\)?圖?`)
             );
             const figMatch =
               figMatch_1[0].length > figMatch_2[0].length
@@ -180,18 +198,18 @@ export const modifySingleParagraph = (
             copyParagraph = [
               copyParagraph.slice(0, figEnd),
               `</i>`,
-              copyParagraph.slice(figEnd)
+              copyParagraph.slice(figEnd),
             ].join("");
             copyParagraph = [
               copyParagraph.slice(0, figStart),
               `<i class='errorfigure ef-${stringToUnicode(fig)}'>`,
-              copyParagraph.slice(figStart)
+              copyParagraph.slice(figStart),
             ].join("");
             paragraphMatch.figuresErrors.unshift({
               group: stringToUnicode(fig),
               fig,
               start: figStart,
-              end: figEnd
+              end: figEnd,
             });
           } else {
             // 圖X 未出現在文字中
@@ -200,7 +218,7 @@ export const modifySingleParagraph = (
               group: stringToUnicode(fig),
               fig,
               start,
-              end
+              end,
             });
           }
         });
@@ -211,12 +229,12 @@ export const modifySingleParagraph = (
           paragraph = [
             paragraph.slice(0, end),
             `</i>`,
-            paragraph.slice(end)
+            paragraph.slice(end),
           ].join("");
           paragraph = [
             paragraph.slice(0, start),
             `<i class='errorfigure'>`,
-            paragraph.slice(start)
+            paragraph.slice(start),
           ].join("");
         }
       } else if (matches[i].type === "wrongWords") {
@@ -227,18 +245,18 @@ export const modifySingleParagraph = (
         paragraph = [
           paragraph.slice(0, end),
           `</i>`,
-          paragraph.slice(end)
+          paragraph.slice(end),
         ].join("");
         paragraph = [
           paragraph.slice(0, start),
           `<i class='error ew-${stringToUnicode(value)}'>`,
-          paragraph.slice(start)
+          paragraph.slice(start),
         ].join("");
         paragraphMatch.wrongWords.unshift({
           group: stringToUnicode(value),
           value,
           start,
-          end
+          end,
         });
       } else if (matches[i].type === "aboriginalWords") {
         const start = matches[i].index;
@@ -248,18 +266,18 @@ export const modifySingleParagraph = (
         paragraph = [
           paragraph.slice(0, end),
           `</i>`,
-          paragraph.slice(end)
+          paragraph.slice(end),
         ].join("");
         paragraph = [
           paragraph.slice(0, start),
           `<i class='aboriginal ab-${stringToUnicode(value)}'>`,
-          paragraph.slice(start)
+          paragraph.slice(start),
         ].join("");
         paragraphMatch.aboriginalWords.unshift({
           group: stringToUnicode(value),
           value,
           start,
-          end
+          end,
         });
       } else if (matches[i].type === "symbol") {
         // console.log(matches[i]);
@@ -277,12 +295,12 @@ export const modifySingleParagraph = (
           paragraph = [
             paragraph.slice(0, end),
             `</i>`,
-            paragraph.slice(end)
+            paragraph.slice(end),
           ].join("");
           paragraph = [
             paragraph.slice(0, start),
             `<i class='potentialError pe-${stringToUnicode(value)}'>`,
-            paragraph.slice(start)
+            paragraph.slice(start),
           ].join("");
         }
         paragraphMatch.potentialErrors.unshift({
@@ -298,7 +316,7 @@ export const modifySingleParagraph = (
             "」",
           keys /*: [""]*/,
           start,
-          end
+          end,
         });
       } else if (matches[i].type === "concatMatch") {
         // 檢查複合式元件 e.g. 第一、第二凹凸結構100、200
@@ -339,7 +357,7 @@ export const modifySingleParagraph = (
                 ...matches[i][5]
                   .replaceAll(/[()]/g, "")
                   .split(/[、,]/)
-                  .filter((e) => e !== "")
+                  .filter((e) => e !== ""),
               ]
             : [""];
         // if (/.+[~-].+/.test(keys[0])) {
@@ -443,7 +461,7 @@ export const modifySingleParagraph = (
                   start,
                   end,
                   keyStart,
-                  keyEnd
+                  keyEnd,
                 });
                 const replacement = `<span class="c-${stringToUnicode(
                   getMapValues(
@@ -456,13 +474,13 @@ export const modifySingleParagraph = (
                   paragraphReplacements.push({
                     start: keyStart,
                     end: keyEnd,
-                    replacement
+                    replacement,
                   });
                 }
                 paragraphReplacements.push({
                   start,
                   end,
-                  replacement
+                  replacement,
                 });
               } else {
                 // 符號錯誤
@@ -489,7 +507,7 @@ export const modifySingleParagraph = (
                       figureOfDrawingsMap,
                       regExpsOrigin[matchIndex]
                     )?.values[0] || _item,
-                  wrongKeys: [keys[_itemIdx]]
+                  wrongKeys: [keys[_itemIdx]],
                 });
 
                 if (
@@ -509,14 +527,14 @@ export const modifySingleParagraph = (
                       start: keyStart,
                       end: keyEnd,
                       replacement,
-                      type: "error"
+                      type: "error",
                     });
                   }
                   paragraphReplacements.push({
                     start,
                     end,
                     replacement,
-                    type: "error"
+                    type: "error",
                   });
                 }
               }
@@ -541,7 +559,7 @@ export const modifySingleParagraph = (
                 start,
                 end,
                 keyStart,
-                keyEnd
+                keyEnd,
               });
               paragraphReplacements.push({
                 start,
@@ -552,7 +570,7 @@ export const modifySingleParagraph = (
                     figureOfDrawingsMap,
                     regExpsOrigin[matchIndex]
                   )?.values[0] || _item
-                )}">`
+                )}">`,
               });
             }
           } else {
@@ -570,7 +588,7 @@ export const modifySingleParagraph = (
                   group: stringToUnicode(_item),
                   item: _item,
                   value: _item,
-                  wrongKeys: [keys[_itemIdx]]
+                  wrongKeys: [keys[_itemIdx]],
                 });
 
                 if (
@@ -584,7 +602,7 @@ export const modifySingleParagraph = (
                     replacement: `<i class="error e-${stringToUnicode(
                       _item
                     )}">`,
-                    type: "error"
+                    type: "error",
                   });
 
                   paragraphReplacements.push({
@@ -593,7 +611,7 @@ export const modifySingleParagraph = (
                     replacement: `<i class="error e-${stringToUnicode(
                       _item
                     )}">`,
-                    type: "error"
+                    type: "error",
                   });
                 }
               } else {
@@ -607,7 +625,7 @@ export const modifySingleParagraph = (
                   value: _item,
                   start,
                   end,
-                  keys: [keys[_itemIdx]]
+                  keys: [keys[_itemIdx]],
                 });
 
                 if (
@@ -621,7 +639,7 @@ export const modifySingleParagraph = (
                     replacement: `<i class="potentialError pe-${stringToUnicode(
                       _item
                     )}">`,
-                    type: "potentialError"
+                    type: "potentialError",
                   });
 
                   paragraphReplacements.push({
@@ -630,7 +648,7 @@ export const modifySingleParagraph = (
                     replacement: `<i class="potentialError pe-${stringToUnicode(
                       _item
                     )}">`,
-                    type: "potentialError"
+                    type: "potentialError",
                   });
                 }
               }
@@ -647,7 +665,7 @@ export const modifySingleParagraph = (
                   replacement: `<i class="potentialError pe-${stringToUnicode(
                     _item
                   )}">`,
-                  type: "potentialError"
+                  type: "potentialError",
                 });
               }
 
@@ -660,7 +678,7 @@ export const modifySingleParagraph = (
                   : _item,
                 keys: [],
                 start,
-                end
+                end,
               });
             }
           }
@@ -671,7 +689,7 @@ export const modifySingleParagraph = (
             start: matches[i].index + matches[i][1].length,
             end: matches[i].index + matches[i][0].length,
             replacement: `<i class="error">`,
-            type: "error"
+            type: "error",
           });
         }
 
@@ -683,12 +701,12 @@ export const modifySingleParagraph = (
               type === "error" || type === "potentialError"
                 ? `</i>`
                 : `</span>`,
-              paragraph.slice(end)
+              paragraph.slice(end),
             ].join("");
             paragraph = [
               paragraph.slice(0, start),
               replacement,
-              paragraph.slice(start)
+              paragraph.slice(start),
             ].join("");
           });
 
@@ -723,7 +741,7 @@ export const modifySingleParagraph = (
                 ...matches[i][3]
                   .replaceAll(/[()]/g, "")
                   .split(/[、,]/)
-                  .filter((e) => e !== "")
+                  .filter((e) => e !== ""),
               ]
             : [""];
 
@@ -841,7 +859,7 @@ export const modifySingleParagraph = (
                       regExpsOrigin[matchIndex]
                     )?.values[0] || item,
                   value: item,
-                  wrongKeys: [keys[_iii]]
+                  wrongKeys: [keys[_iii]],
                 };
                 if (
                   paragraphMatch.wrongs[0] &&
@@ -855,8 +873,8 @@ export const modifySingleParagraph = (
                       ...paragraphMatch.wrongs[0].wrongKeys,
                       ...wrongMatch.wrongKeys.filter(
                         (k) => !paragraphMatch.wrongs[0].wrongKeys.includes(k)
-                      )
-                    ]
+                      ),
+                    ],
                   };
                 } else {
                   paragraphMatch.wrongs.unshift(wrongMatch);
@@ -877,7 +895,7 @@ export const modifySingleParagraph = (
             ) {
               paragraph = [
                 paragraph.slice(0, start),
-                paragraph.slice(start).replace(value, newValue)
+                paragraph.slice(start).replace(value, newValue),
               ].join("");
             }
 
@@ -900,7 +918,7 @@ export const modifySingleParagraph = (
                   )?.values[0] || item,
                 keys,
                 start,
-                end
+                end,
               });
             }
           } else {
@@ -922,7 +940,7 @@ export const modifySingleParagraph = (
                 )?.values[0] || item,
               keys,
               start,
-              end
+              end,
             });
           }
 
@@ -930,7 +948,7 @@ export const modifySingleParagraph = (
           paragraph = [
             paragraph.slice(0, end),
             `</span>`,
-            paragraph.slice(end)
+            paragraph.slice(end),
           ].join("");
           paragraph = [
             paragraph.slice(0, start),
@@ -941,7 +959,7 @@ export const modifySingleParagraph = (
                 regExpsOrigin[matchIndex]
               )?.values[0] || item
             )}">`,
-            paragraph.slice(start)
+            paragraph.slice(start),
           ].join("");
         } else {
           // 元件名稱錯誤
@@ -964,7 +982,7 @@ export const modifySingleParagraph = (
               paragraph = [
                 paragraph.slice(0, end),
                 `</i>`,
-                paragraph.slice(end)
+                paragraph.slice(end),
               ].join("");
               paragraph = [
                 paragraph.slice(0, start),
@@ -972,7 +990,7 @@ export const modifySingleParagraph = (
                 // 新版不管 potential Error
                 // 元件錯就算 Error
                 `<i class="error e-${stringToUnicode(item)}">`,
-                paragraph.slice(start)
+                paragraph.slice(start),
               ].join("");
             }
 
@@ -980,7 +998,7 @@ export const modifySingleParagraph = (
               group: stringToUnicode(item),
               item,
               value: item,
-              wrongKeys: keys
+              wrongKeys: keys,
             });
           } else if (!RegExp(allSeperatedWords()).test(item)) {
             // 元件名稱錯誤且不包含「分隔字」,且沒有符號
@@ -992,12 +1010,12 @@ export const modifySingleParagraph = (
               paragraph = [
                 paragraph.slice(0, end),
                 `</i>`,
-                paragraph.slice(end)
+                paragraph.slice(end),
               ].join("");
               paragraph = [
                 paragraph.slice(0, start),
                 `<i class="potentialError pe-${stringToUnicode(item)}">`,
-                paragraph.slice(start)
+                paragraph.slice(start),
               ].join("");
             }
 
@@ -1013,7 +1031,7 @@ export const modifySingleParagraph = (
                 : item,
               keys,
               start,
-              end
+              end,
             });
           }
         }
@@ -1049,8 +1067,8 @@ export const modifySingleParagraph = (
           ...acc[prevIdx],
           wrongKeys: [
             ...acc[prevIdx].wrongKeys,
-            ...cur.wrongKeys.filter((k) => !acc[prevIdx].wrongKeys.includes(k))
-          ]
+            ...cur.wrongKeys.filter((k) => !acc[prevIdx].wrongKeys.includes(k)),
+          ],
         };
         return acc;
       }
@@ -1098,7 +1116,7 @@ export const modifySingleParagraph = (
       modifiedParagraph: paragraph,
       tables,
       paragraphMatch,
-      isCollapse: true
+      isCollapse: true,
     };
   } catch (err) {
     console.log("here is why");
@@ -1116,9 +1134,9 @@ export const modifySingleParagraph = (
         wrongs: [],
         potentialErrors: [],
         wrongWords: [],
-        aboriginalWords: []
+        aboriginalWords: [],
       },
-      isCollapse: true
+      isCollapse: true,
     };
   }
 };

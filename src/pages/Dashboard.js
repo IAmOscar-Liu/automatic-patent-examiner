@@ -56,14 +56,14 @@ const Dashboard = () => {
       ...prev,
       isLoading: true,
       fileName: newFileName,
-      fileContent
+      fileContent,
     }));
   };
 
   useEffect(() => {
     setEssentialData((prev) => ({
       ...prev,
-      pathName: getPathName()
+      pathName: getPathName(),
     }));
   }, []);
 
@@ -79,7 +79,7 @@ const Dashboard = () => {
     setSavedFileContent((prev) => ({
       ...prev,
       content: newTextAreaValue,
-      textAreaValue: newTextAreaValue
+      textAreaValue: newTextAreaValue,
     }));
   }, [XMLData.fileContent]);
 
@@ -121,10 +121,10 @@ const Dashboard = () => {
                 convertImage: mammoth.images.imgElement((image) => {
                   return image.read("base64").then(() => {
                     return {
-                      src: "data:" + image.contentType
+                      src: "data:" + image.contentType,
                     };
                   });
-                })
+                }),
               }
             )
             .then((resultObject) => {
@@ -173,7 +173,7 @@ const Dashboard = () => {
             borderRadius: 5,
             padding: "3px 7px",
             fontSize: "1.02em",
-            background: "#d8d5d5"
+            background: "#d8d5d5",
           }}
         >
           歷史記錄
@@ -193,7 +193,7 @@ const Dashboard = () => {
             onClick={() =>
               setSavedFileContent((prev) => ({
                 ...prev,
-                isInEditingMode: true
+                isInEditingMode: true,
               }))
             }
           >
@@ -204,13 +204,18 @@ const Dashboard = () => {
             onClick={() =>
               setSavedFileContent((prev) => ({
                 ...prev,
-                isInEditingMode: false
+                isInEditingMode: false,
               }))
             }
           >
             選取XML或WORD檔案
           </button>
         </div>
+        {!savedFileContent.isInEditingMode && (
+          <p style={{ color: "red", marginBottom: 10, fontWeight: 'bold' }}>
+            選取WORD檔案仍屬測試階段，目前僅支援新型案件
+          </p>
+        )}
         {savedFileContent.isInEditingMode ? (
           <>
             {XMLData.fileName !== "" &&
@@ -251,7 +256,7 @@ const Dashboard = () => {
                 onChange={(e) =>
                   setSavedFileContent((prev) => ({
                     ...prev,
-                    textAreaValue: e.target.value
+                    textAreaValue: e.target.value,
                   }))
                 }
               ></textarea>
@@ -267,7 +272,7 @@ const Dashboard = () => {
                 onClick={() => {
                   setSavedFileContent((prev) => ({
                     ...prev,
-                    content: prev.textAreaValue
+                    content: prev.textAreaValue,
                   }));
                   handleFileChange(
                     "untitle.xml",
@@ -282,7 +287,7 @@ const Dashboard = () => {
                   onClick={() =>
                     setSavedFileContent((prev) => ({
                       ...prev,
-                      textAreaValue: prev.content
+                      textAreaValue: prev.content,
                     }))
                   }
                 >
@@ -293,7 +298,7 @@ const Dashboard = () => {
                 onClick={() =>
                   setSavedFileContent((prev) => ({
                     ...prev,
-                    textAreaValue: ""
+                    textAreaValue: "",
                   }))
                 }
               >
