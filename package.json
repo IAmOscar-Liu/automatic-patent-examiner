@@ -9,6 +9,8 @@
   "homepage": "./",
   "main": "src/index.js",
   "dependencies": {
+    "mammoth": "^1.5.1",
+    "node-html-parser": "^6.1.5",
     "react": "17.0.0",
     "react-dom": "17.0.0",
     "react-dropzone": "11.2.4",
@@ -16,14 +18,15 @@
     "react-scripts": "3.4.3",
     "react-tooltip": "4.2.19",
     "reactjs-popup": "2.0.4",
-    "xml-reader": "2.4.3"
+    "xml-reader": "2.4.3",
+    "xmlbuilder2": "^3.0.2"
   },
   "devDependencies": {
     "typescript": "3.8.3"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
