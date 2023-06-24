@@ -212,8 +212,13 @@ const Dashboard = () => {
           </button>
         </div>
         {!savedFileContent.isInEditingMode && (
-          <p style={{ color: "red", marginBottom: 10, fontWeight: 'bold' }}>
-            選取WORD檔案仍屬測試階段，目前僅支援新型案件
+          <p style={{ color: "red", marginBottom: 10, fontWeight: "bold" }}>
+            WORD檔案僅支援
+            {process.env.REACT_APP_SYSTEM_TYPE !== "tipo" &&
+            !process.env.REACT_APP_PATENT_TYPE?.includes("invention")
+              ? "「新型專利」的"
+              : ""}
+            docx檔，請確認您的檔案格式符合規定
           </p>
         )}
         {savedFileContent.isInEditingMode ? (

@@ -1,6 +1,7 @@
 import { create } from "xmlbuilder2";
 
 function xmlbuilder({
+  patentType,
   title,
   titleEn,
   abstract,
@@ -13,11 +14,22 @@ function xmlbuilder({
   claimFields,
   figureDrawingIdx,
   figureDrawingFields,
-  descriptionOfElementFields
+  descriptionOfElementFields,
 }) {
-  const root = create({ version: "1.0" }).ele("utility-model-specification", {
-    "application-num": "1122XXXXX"
-  });
+  patentType =
+    process.env.REACT_APP_SYSTEM_TYPE === "tipo" &&
+    process.env.REACT_APP_PATENT_TYPE?.includes("invention")
+      ? patentType
+      : "新型";
+
+  const root =
+    patentType === "發明"
+      ? create({ version: "1.0" }).ele("invention-specification", {
+          "application-num": `${new Date().getFullYear() - 1911 + ""}1XXXXX`,
+        })
+      : create({ version: "1.0" }).ele("utility-model-specification", {
+          "application-num": `${new Date().getFullYear() - 1911 + ""}2XXXXX`,
+        });
 
   // 中文摘要
   if (abstract.length > 0) {
@@ -33,12 +45,20 @@ function xmlbuilder({
       .ele("abstract-dtext");
     for (let ab of abstractEn) abstractEle.ele("p", { general: "" }).txt(ab);
   }
-  // 中英文新型名稱
+  // 中英文新型/發明名稱
   const descriptionEle = root.ele("description");
   if (title)
-    descriptionEle.ele("utility-model-title", { lang: "tw" }).txt(title);
+    descriptionEle
+      .ele(patentType === "新型" ? "utility-model-title" : "invention-title", {
+        lang: "tw",
+      })
+      .txt(title);
   if (titleEn)
-    descriptionEle.ele("utility-model-title", { lang: "en" }).txt(titleEn);
+    descriptionEle
+      .ele(patentType === "新型" ? "utility-model-title" : "invention-title", {
+        lang: "en",
+      })
+      .txt(titleEn);
   // 技術領域
   if (techFields.length > 0) {
     const techFieldsEle = descriptionEle.ele("technical-field");
@@ -51,7 +71,7 @@ function xmlbuilder({
     for (let { general, content } of backgroundArtFields)
       backgroundArtFieldsEle.ele("p", { general }).txt(content);
   }
-  // 新型內容
+  // 新型/發明內容
   if (disclosureFields.length > 0) {
     const disclosureFieldsEle = descriptionEle.ele("disclosure");
     for (let { general, content } of disclosureFields)
@@ -114,7 +134,7 @@ function xmlbuilder({
     const pEle = root
       .ele("figure-drawings", {
         lang: "",
-        "figure-labels": figureDrawingIdx
+        "figure-labels": figureDrawingIdx,
       })
       .ele("p", { general: "" });
     for (let fIdx = 0; fIdx < figureDrawingFields.length; fIdx++) {

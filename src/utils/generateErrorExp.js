@@ -28,7 +28,7 @@ export const generateErrorExp = (essentialData) => {
     }
   });
   if (descriptionOfElementMapDuplicate.length > 0) {
-    const message = `本案「符號說明」所述之構件其符號重複：${descriptionOfElementMapDuplicate
+    const message = `說明書之「符號說明」所述之構件其符號重複：${descriptionOfElementMapDuplicate
       .map(({ first, last }) => `${first}與${last}`)
       .join("；")}。【摘要、說明書及圖式其餘部分請一併確認及修正】`;
     essentialData.allErrors_v2.no_law.push(message);
@@ -36,6 +36,7 @@ export const generateErrorExp = (essentialData) => {
 
   // figureOfDrawingsMap
   const figureOfDrawingsMapDuplicate = [];
+  const figureOfDrawingsInconsistent = [];
   Object.keys(essentialData.figureOfDrawingsMap).forEach((key) => {
     if (essentialData.figureOfDrawingsMap[key].status === "key duplicate") {
       const first = `「${
@@ -51,12 +52,33 @@ export const generateErrorExp = (essentialData) => {
       });
       figureOfDrawingsMapDuplicate.push({ first, last });
     }
+    if (
+      essentialData.figureOfDrawingsMap[key].status === "element inconsistent"
+    ) {
+      const figureEl = essentialData.figureOfDrawingsMap[key].values[0];
+      const descriptionEl =
+        essentialData.descriptionOfElementMap[key]?.values?.[0];
+      if (figureEl && descriptionEl)
+        figureOfDrawingsInconsistent.push({ key, figureEl, descriptionEl });
+    }
   });
   if (figureOfDrawingsMapDuplicate.length > 0) {
-    const message = `本案「代表圖之符號簡單說明」所述之構件其符號重複：${figureOfDrawingsMapDuplicate
+    const message = `摘要之「代表圖之符號簡單說明」所述之構件其符號重複：${figureOfDrawingsMapDuplicate
       .map(({ first, last }) => `${first}與${last}`)
       .join("；")}。【摘要、說明書及圖式其餘部分請一併確認及修正】`;
     essentialData.allErrors_v2.no_law.push(message);
+  }
+  if (figureOfDrawingsInconsistent.length > 0) {
+    essentialData.allErrors_v2.law_112_3.push({
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
+      message: `摘要之【代表圖符號簡單說明】記載之${figureOfDrawingsInconsistent
+        .map(({ key, figureEl }) => `「${figureEl}（${key}）」`)
+        .join("、")}與說明書之【符號說明】記載之${figureOfDrawingsInconsistent
+        .map(({ key, descriptionEl }) => `「${descriptionEl}（${key}）」`)
+        .join("、")}，其用語不一致。`,
+    });
   }
 
   // failedDescriptionOfElementMap
@@ -136,7 +158,13 @@ export const generateErrorExp = (essentialData) => {
             correctKeyInDescriptionOfElement || correctKeyInFigureOfDrawingsMap
           }）」`;
           essentialData.allErrors.allDisclosureParagraphDetails.push({
-            message: `依專利法施行細則第45條準用第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「說明書」之「新型內容」內容之記載未依前開規定之格式撰寫（段落編號【${general}】第　、　行 ／ 第　頁第　、　行之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其符號不一致，應予修正。查違反專利法第120條準用第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
+            message: `依專利法施行細則${
+              essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+            }第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「說明書」之「${
+              essentialData.applicationNum[3] === "1" ? "發明" : "新型"
+            }內容」內容之記載未依前開規定之格式撰寫（段落編號【${general}】第　、　行 ／ 第　頁第　、　行之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其符號不一致，應予修正。查違反專利法${
+              essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+            }第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
           });
           if (!disclosureKeyUnmatch[`${unMatch}@@@${unMatchWith}`])
             disclosureKeyUnmatch[`${unMatch}@@@${unMatchWith}`] = [
@@ -181,7 +209,13 @@ export const generateErrorExp = (essentialData) => {
             correctNameInFigureOfDrawingsMap
           }　（${wrongKeys.filter((k) => k !== "").join("）、（")}）」`;
           essentialData.allErrors.allDisclosureParagraphDetails.push({
-            message: `依專利法施行細則第45條準用第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「說明書」之「新型內容」內容之記載未依前開規定之格式撰寫（段落編號【${general}】第　、　行 ／ 第　頁第　、　行之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其名稱用語不一致，應予修正。查違反專利法第120條準用第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
+            message: `依專利法施行細則${
+              essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+            }第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「說明書」之「${
+              essentialData.applicationNum[3] === "1" ? "發明" : "新型"
+            }內容」內容之記載未依前開規定之格式撰寫（段落編號【${general}】第　、　行 ／ 第　頁第　、　行之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其名稱用語不一致，應予修正。查違反專利法${
+              essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+            }第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
           });
           if (!disclosureNameUnmatch[`${unMatch}@@@${unMatchWith}`])
             disclosureNameUnmatch[`${unMatch}@@@${unMatchWith}`] = [
@@ -231,8 +265,15 @@ export const generateErrorExp = (essentialData) => {
       )
       .join("；");
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
-      message: "說明書之「新型內容」記載之符號不一致：" + subMessageArr + "。",
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
+      message:
+        `說明書之「${
+          essentialData.applicationNum[3] === "1" ? "發明" : "新型"
+        }內容」記載之符號不一致：` +
+        subMessageArr +
+        "。",
     });
   }
   if (Object.keys(disclosureNameUnmatch).length > 0) {
@@ -255,9 +296,15 @@ export const generateErrorExp = (essentialData) => {
       )
       .join("；");
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
       message:
-        "說明書之「新型內容」記載之技術用語不一致：" + subMessageArr + "。",
+        `說明書之「${
+          essentialData.applicationNum[3] === "1" ? "發明" : "新型"
+        }內容」記載之技術用語不一致：` +
+        subMessageArr +
+        "。",
     });
   }
   if (Object.keys(disclosureWrongWords).length > 0) {
@@ -322,7 +369,11 @@ export const generateErrorExp = (essentialData) => {
             correctKeyInDescriptionOfElement || correctKeyInFigureOfDrawingsMap
           }）」`;
           essentialData.allErrors.allModeForInventionParagraphDetails.push({
-            message: `依專利法施行細則第45條準用第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「說明書」之「實施方式」內容之記載未依前開規定之格式撰寫（段落編號【${general}】第　、　行 ／ 第　頁第　、　行之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其符號不一致，應予修正。查違反專利法第120條準用第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
+            message: `依專利法施行細則${
+              essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+            }第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「說明書」之「實施方式」內容之記載未依前開規定之格式撰寫（段落編號【${general}】第　、　行 ／ 第　頁第　、　行之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其符號不一致，應予修正。查違反專利法${
+              essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+            }第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
           });
           if (!modeForInventionKeyUnmatch[`${unMatch}@@@${unMatchWith}`])
             modeForInventionKeyUnmatch[`${unMatch}@@@${unMatchWith}`] = [
@@ -367,7 +418,11 @@ export const generateErrorExp = (essentialData) => {
             correctNameInFigureOfDrawingsMap
           }（${wrongKeys.filter((k) => k !== "").join("）、（")}）」`;
           essentialData.allErrors.allModeForInventionParagraphDetails.push({
-            message: `依專利法施行細則第45條準用第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「說明書」之「實施方式」內容之記載未依前開規定之格式撰寫（段落編號【${general}】第　、　行 ／ 第　頁第　、　行之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其名稱用語不一致，應予修正。查違反專利法第120條準用第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
+            message: `依專利法施行細則${
+              essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+            }第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「說明書」之「實施方式」內容之記載未依前開規定之格式撰寫（段落編號【${general}】第　、　行 ／ 第　頁第　、　行之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其名稱用語不一致，應予修正。查違反專利法${
+              essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+            }第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
           });
           if (!modeForInventionNameUnmatch[`${unMatch}@@@${unMatchWith}`])
             modeForInventionNameUnmatch[`${unMatch}@@@${unMatchWith}`] = [
@@ -400,7 +455,11 @@ export const generateErrorExp = (essentialData) => {
 
     para.paragraphMatch.figuresErrors.forEach(({ fig }) => {
       essentialData.allErrors.allModeForInventionParagraphDetails.push({
-        message: `依專利法施行細則第45條準用第17條第1項第6款規定，說明書之「實施方式」必須敘明：記載一個以上之實施方式，必要時得以實施例說明；有圖式者，應參照圖式加以說明。本案「實施方式」之記載未依前開規定之格式撰寫（段落[${general}]第　行所述之${fig}未揭露於圖式）。查違反專利法第120條準用第26條第4項規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
+        message: `依專利法施行細則${
+          essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+        }第17條第1項第6款規定，說明書之「實施方式」必須敘明：記載一個以上之實施方式，必要時得以實施例說明；有圖式者，應參照圖式加以說明。本案「實施方式」之記載未依前開規定之格式撰寫（段落[${general}]第　行所述之${fig}未揭露於圖式）。查違反專利法${
+          essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+        }第26條第4項規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
       });
       if (!modeForInventionFiguresErrors[general])
         modeForInventionFiguresErrors[general] = [fig];
@@ -427,7 +486,9 @@ export const generateErrorExp = (essentialData) => {
       )
       .join("；");
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
       message: "說明書之「實施方式」記載之符號不一致：" + subMessageArr + "。",
     });
   }
@@ -453,7 +514,9 @@ export const generateErrorExp = (essentialData) => {
       )
       .join("；");
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
       message:
         "說明書之「實施方式」記載之技術用語不一致：" + subMessageArr + "。",
     });
@@ -486,8 +549,9 @@ export const generateErrorExp = (essentialData) => {
       )
       .join("；");
     essentialData.allErrors_v2.law_112_3.push({
-      prefix:
-        "依專利法施行細則第45條準用第17條第1項第6款規定，說明書之「實施方式」必須敘明：記載一個以上之實施方式，必要時得以實施例說明；有圖式者，應參照圖式加以說明。",
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第17條第1項第6款規定，說明書之「實施方式」必須敘明：記載一個以上之實施方式，必要時得以實施例說明；有圖式者，應參照圖式加以說明。`,
       message:
         "本案「實施方式」內容之記載未依前開規定之格式撰寫（未參照圖式加以說明：" +
         subMessageArr +
@@ -552,14 +616,18 @@ export const generateErrorExp = (essentialData) => {
             )
           ) {
             essentialData.allErrors.allClaimsDetails.push({
-              message: `依專利法施行細則第45條準用第18條第5項之規定：「…。但多項附屬項間不得直接或間接依附。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項係為多項附屬項，依規定不得直接或間接依附於多項附屬項第${
+              message: `依專利法施行細則${
+                essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+              }第18條第5項之規定：「…。但多項附屬項間不得直接或間接依附。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項係為多項附屬項，依規定不得直接或間接依附於多項附屬項第${
                 message.match(/[0-9]+/)[0]
-              }項），應予修正。查違反專利法第120條準用第26條第4項之規定。`,
+              }項），應予修正。查違反專利法${
+                essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+              }第26條第4項之規定。`,
             });
             claimErrors.multi2multiRefErrors.push(
               `請求項${num}（多項附屬項）直接或間接依附請求項${
                 message.match(/[0-9]+/)[0]
-              }（多項附屬項）`
+              }（多項附屬項）。`
             );
           } else if (
             /不符合附屬項之記載形式/.test(message) ||
@@ -571,11 +639,15 @@ export const generateErrorExp = (essentialData) => {
             claimErrors.invalidStarts.push(num);
           } else if (/^請求項未以單句為之/.test(message)) {
             essentialData.allErrors.allClaimsDetails.push({
-              message: `依專利法施行細則第45條準用第18條第6項之規定：「。獨立項或附屬項之文字敘述，應以單句為之」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（${
+              message: `依專利法施行細則${
+                essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+              }第18條第6項之規定：「。獨立項或附屬項之文字敘述，應以單句為之」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（${
                 message.includes("句號在句中")
                   ? "於句中出現句點為不當之處"
                   : "文字敘述未以單句為之"
-              }），應予修正。查違反專利法第120條準用第26條第4項之規定。`,
+              }），應予修正。查違反專利法${
+                essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+              }第26條第4項之規定。`,
             });
             claimErrors.singleSentences.push({
               num,
@@ -586,7 +658,11 @@ export const generateErrorExp = (essentialData) => {
           } else if (/的符號未置於括號內/.test(message)) {
             const name = `「${message.match(/「.*」/)[0].slice(1, -1)}」`;
             essentialData.allErrors.allClaimsDetails.push({
-              message: `依專利法施行細則第45條準用第19條第2項規定：「請求項之技術特徵得引用圖式中對應之符號，該符號應附加於對應之技術特徵後，並置於括號內；…。」本案「申請專利範圍」第${num}項第　行內容${name}之記載未依前開規定之格式撰寫（申請專利範圍之符號應全部引用並置於括號內或將申請專利範圍中之符號全數加以刪除），應予修正。查違反專利法第120條準用第26條第4項之規定。`,
+              message: `依專利法施行細則${
+                essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+              }第19條第2項規定：「請求項之技術特徵得引用圖式中對應之符號，該符號應附加於對應之技術特徵後，並置於括號內；…。」本案「申請專利範圍」第${num}項第　行內容${name}之記載未依前開規定之格式撰寫（申請專利範圍之符號應全部引用並置於括號內或將申請專利範圍中之符號全數加以刪除），應予修正。查違反專利法${
+                essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+              }第26條第4項之規定。`,
             });
             if (!claimErrors.noBrackets[name])
               claimErrors.noBrackets[name] = [num];
@@ -599,9 +675,19 @@ export const generateErrorExp = (essentialData) => {
             const elNames = [...message.matchAll(/「.+?」/g)].map((m) =>
               m[0].slice(1, -1)
             );
-            const refClaimNum = message.match(/\([0-9]+\)/)[0].slice(1, -1);
+            const refClaimNum = message
+              .match(/請求項\([0-9]+\)/)[0]
+              .slice(4, -1);
             essentialData.allErrors.allClaimsDetails.push({
-              message: `依專利法施行細則第45條準用第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項所述標的名稱「${elNames[0]}」，與直接或間接依附之申請專利範圍第${refClaimNum}項標的名稱「${elNames[1]}」，其名稱用語不一致），應予修正。查違反專利法第120條準用第26條第4項之規定。`,
+              message: `依專利法施行細則${
+                essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+              }第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案請求項第${num}項內容之記載未依前開規定之格式撰寫（該項所述標的名稱「${
+                elNames[0]
+              }」，與直接或間接依附之請求項第${refClaimNum}項標的名稱「${
+                elNames[1]
+              }」，其名稱用語不一致），應予修正。查違反專利法${
+                essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+              }第26條第4項之規定。`,
             });
             claimErrors.titleNoMatches.push({
               num,
@@ -614,14 +700,22 @@ export const generateErrorExp = (essentialData) => {
             /^請求項[0-9]+不在該請求項之前或不存在/.test(message)
           ) {
             essentialData.allErrors.allClaimsDetails.push({
-              message: `依專利法施行細則第45條準用第18條第5項之規定：「附屬項僅得依附在前之獨立項或附屬項。…。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項所依附之申請專利範圍項號第${
+              message: `依專利法施行細則${
+                essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+              }第18條第5項之規定：「附屬項僅得依附在前之獨立項或附屬項。…。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項所依附之申請專利範圍項號第${
                 message.match(/[0-9]+/)[0]
-              }項有誤），應予修正。查違反專利法第120條準用第26條第4項之規定。`,
+              }項有誤），應予修正。查違反專利法${
+                essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+              }第26條第4項之規定。`,
             });
             claimErrors.invalidAttaches.push(num);
           } else if (/^多項附屬項未以選擇式為之/.test(message)) {
             essentialData.allErrors.allClaimsDetails.push({
-              message: `依專利法施行細則第45條準用第18條第4項之規定：「依附於二項以上之附屬項為多項附屬項，應以選擇式為之。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項係為多項附屬項，未以選擇式為之），應予修正。查違反專利法第120條準用第26條第4項之規定。`,
+              message: `依專利法施行細則${
+                essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+              }第18條第4項之規定：「依附於二項以上之附屬項為多項附屬項，應以選擇式為之。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項係為多項附屬項，未以選擇式為之），應予修正。查違反專利法${
+                essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+              }第26條第4項之規定。`,
             });
             claimErrors.multi2multiNoSelects.push(num);
           } else if (/^元件名稱「.+?」未見於本請求項先前內容/.test(message)) {
@@ -636,11 +730,15 @@ export const generateErrorExp = (essentialData) => {
               const prevClaimNum = message
                 .match(/\([0-9]+\)/)?.[0]
                 .slice(1, -1);
-              dispMsg = `依專利法施行細則第45條準用第18條第1項之規定：「…。獨立項、附屬項，應以其依附關係，依序以阿拉伯數字編號排列。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項第　行所述之構件「${eln}」，於${
+              dispMsg = `依專利法施行細則${
+                essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+              }第18條第1項之規定：「…。獨立項、附屬項，應以其依附關係，依序以阿拉伯數字編號排列。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項第　行所述之構件「${eln}」，於${
                 prevClaimNum
                   ? "所依附申請專利範圍第" + prevClaimNum + "項中未揭示此構件"
                   : "該構件前之文字敘述未揭露該構件"
-              }，係不當依附），應予修正。查違反專利法第120條準用第26條第4項規定之規定。【摘要、說明書其餘部分請一併確認及修正】`;
+              }，係不當依附），應予修正。查違反專利法${
+                essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+              }第26條第4項規定之規定。【摘要、說明書其餘部分請一併確認及修正】`;
               if (!claimErrors["不當依附"][num])
                 claimErrors["不當依附"][num] = [
                   { name: eln, prevNum: prevClaimNum },
@@ -698,7 +796,11 @@ export const generateErrorExp = (essentialData) => {
                 correctKeyInFigureOfDrawingsMap
               }）」`;
               essentialData.allErrors.allClaimsDetails.push({
-                message: `依專利法施行細則第45條準用第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項第　行所述之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其符號不一致，應予修正。查違反專利法第120條準用第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
+                message: `依專利法施行細則${
+                  essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+                }第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項第　行所述之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其符號不一致，應予修正。查違反專利法${
+                  essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+                }第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
               });
               if (!claimErrors.compKeyUnmatch[`${unMatch}@@@${unMatchWith}`])
                 claimErrors.compKeyUnmatch[`${unMatch}@@@${unMatchWith}`] = [
@@ -743,7 +845,11 @@ export const generateErrorExp = (essentialData) => {
                 correctNameInFigureOfDrawingsMap
               }（${wrongKeys.filter((k) => k !== "").join("）、（")}）」`;
               essentialData.allErrors.allClaimsDetails.push({
-                message: `依專利法施行細則第45條準用第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項第　行所述之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其名稱用語不一致，應予修正。查違反專利法第120條準用第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
+                message: `依專利法施行細則${
+                  essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+                }第22條第1項之規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案「申請專利範圍」第${num}項內容之記載未依前開規定之格式撰寫（該項第　行所述之構件${unMatch}${midMessage}所述之構件${unMatchWith}，其名稱用語不一致，應予修正。查違反專利法${
+                  essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+                }第26條第4項之規定。【摘要、說明書及圖式其餘部分請一併確認及修正】`,
               });
               if (!claimErrors.compNameUnmatch[`${unMatch}@@@${unMatchWith}`])
                 claimErrors.compNameUnmatch[`${unMatch}@@@${unMatchWith}`] = [
@@ -806,7 +912,8 @@ export const generateErrorExp = (essentialData) => {
                 message: generateInvalidMainElementMessage(
                   mainElement,
                   utilityModelTitle,
-                  [...claimErrorCtx.claims, num]
+                  [...claimErrorCtx.claims, num],
+                  essentialData.applicationNum[3] === "1"
                 ),
               };
             } else {
@@ -817,7 +924,8 @@ export const generateErrorExp = (essentialData) => {
                 message: generateInvalidMainElementMessage(
                   mainElement,
                   utilityModelTitle,
-                  [num]
+                  [num],
+                  essentialData.applicationNum[3] === "1"
                 ),
               });
             }
@@ -849,7 +957,9 @@ export const generateErrorExp = (essentialData) => {
   }
   if (claimErrors.multi2multiRefErrors.length > 0) {
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第18條第5項後段規定：「但多項附屬項間不得直接或間接依附。」本案下列所述多項附屬項間之依附方式不符前開規定。`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第18條第5項後段規定：「但多項附屬項間不得直接或間接依附。」本案下列所述多項附屬項間之依附方式不符前開規定。`,
       message: claimErrors.multi2multiRefErrors.join("、"),
     });
   }
@@ -862,20 +972,28 @@ export const generateErrorExp = (essentialData) => {
   }
   if (claimErrors.singleSentences.length > 0) {
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第18條第6項規定：「獨立項或附屬項之文字敘述，應以單句為之。」`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第18條第6項規定：「獨立項或附屬項之文字敘述，應以單句為之。」`,
       message:
-        "本案「申請專利範圍」未依前開規定之格式撰寫：" +
+        "本案請求項未依前開規定之格式撰寫：" +
         claimErrors.singleSentences
           .map(({ num, msg }) => `請求項${num}（${msg}）`)
+          .reduce((acc, cur, idx, prev) => {
+            if (prev.indexOf(cur) === idx) acc.push(cur);
+            return acc;
+          }, [])
           .join("、") +
         "。",
     });
   }
   if (Object.keys(claimErrors.noBrackets).length > 0) {
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第19條第2項規定：「請求項之技術特徵得引用圖式中對應之符號，該符號應附加於對應之技術特徵後，並置於括號內；……。」`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第19條第2項規定：「請求項之技術特徵得引用圖式中對應之符號，該符號應附加於對應之技術特徵後，並置於括號內；……。」`,
       message:
-        "本案「申請專利範圍」未依前開規定之格式撰寫（申請專利範圍之符號應全部引用並置於括號內或將全數請求項之符號全數加以刪除）：" +
+        "本案請求項未依前開規定之格式撰寫（申請專利範圍之符號應全部引用並置於括號內或將全數請求項之符號全數加以刪除）：" +
         Object.keys(claimErrors.noBrackets)
           .map(
             (name) =>
@@ -892,14 +1010,18 @@ export const generateErrorExp = (essentialData) => {
   if (claimErrors.titleNoMatches.length > 0) {
     claimErrors.titleNoMatches.forEach(({ num, prevNum, name, prevName }) =>
       essentialData.allErrors_v2.law_112_3.push({
-        prefix: `依專利法施行細則第45條準用第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
+        prefix: `依專利法施行細則${
+          essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+        }第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」`,
         message: `本案請求項${num}所述標的名稱「${name}」，與直接或間接依附之請求項${prevNum}所述標的名稱「${prevName}」，其名稱用語不一致。`,
       })
     );
   }
   if (claimErrors.invalidAttaches.length > 0) {
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第18條第5項前段規定：「附屬項僅得依附在前之獨立項或附屬項。」`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第18條第5項前段規定：「附屬項僅得依附在前之獨立項或附屬項。」`,
       message:
         "本案請求項" +
         claimErrors.invalidAttaches.join("、") +
@@ -908,7 +1030,9 @@ export const generateErrorExp = (essentialData) => {
   }
   if (claimErrors.multi2multiNoSelects.length > 0) {
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第18條第4項規定：「依附於二項以上之附屬項為多項附屬項，應以選擇式為之。」`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第18條第4項規定：「依附於二項以上之附屬項為多項附屬項，應以選擇式為之。」`,
       message:
         "本案請求項" +
         claimErrors.multi2multiNoSelects.join("、") +
@@ -923,6 +1047,10 @@ export const generateErrorExp = (essentialData) => {
           `請求項${num}（獨立項）所述之技術特徵` +
           claimErrors["未揭示"][num]
             .map((name) => `「${name}」（第　行）`)
+            .reduce((acc, cur, idx, prev) => {
+              if (prev.indexOf(cur) === idx) acc.push(cur);
+              return acc;
+            }, [])
             .join("、") +
           "，於該技術特徵前之文字敘述未揭示【全案所述相關技術內容，請一併檢視確認或修正】。",
       })
@@ -930,15 +1058,23 @@ export const generateErrorExp = (essentialData) => {
   }
   if (Object.keys(claimErrors["不當依附"]).length > 0) {
     Object.keys(claimErrors["不當依附"]).forEach((num) => {
-      essentialData.allErrors_v2.law_112_3.push({
-        prefix: `依專利法施行細則第45條準用第18條第1項後段規定：「獨立項、附屬項，應以其依附關係，依序以阿拉伯數字編號排列。」下列請求項間之依附關係不符前開規定。`,
-        message:
-          `本案請求項${num}所述之` +
-          claimErrors["不當依附"][num]
-            .map(({ name }) => `「${name}」（第　行）`)
-            .join("；") +
-          `，於所依附請求項${claimErrors["不當依附"][num][0].prevNum}中未揭示。`,
-      });
+      if (claimErrors["不當依附"][num][0].prevNum) {
+        essentialData.allErrors_v2.law_112_3.push({
+          prefix: `依專利法施行細則${
+            essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+          }第18條第1項後段規定：「獨立項、附屬項，應以其依附關係，依序以阿拉伯數字編號排列。」下列請求項間之依附關係不符前開規定。`,
+          message:
+            `本案請求項${num}所述之` +
+            claimErrors["不當依附"][num]
+              .map(({ name }) => `「${name}」（第　行）`)
+              .reduce((acc, cur, idx, prev) => {
+                if (prev.indexOf(cur) === idx) acc.push(cur);
+                return acc;
+              }, [])
+              .join("、") +
+            `，於所依附請求項${claimErrors["不當依附"][num][0].prevNum}中未揭示。`,
+        });
+      }
     });
   }
   if (Object.keys(claimErrors.compNameUnmatch).length > 0) {
@@ -961,7 +1097,9 @@ export const generateErrorExp = (essentialData) => {
       )
       .join("；");
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案有下列技術用語或符號不一致，不符上開規定。`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案有下列技術用語或符號不一致，不符上開規定。`,
       message:
         "「申請專利範圍」與說明書記載之用語不一致：" + subMessageArr + "。",
     });
@@ -986,7 +1124,9 @@ export const generateErrorExp = (essentialData) => {
       )
       .join("；");
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案有下列技術用語或符號不一致，不符上開規定。`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第22條第1項規定：「說明書、申請專利範圍及摘要中之技術用語及符號應一致。」本案有下列技術用語或符號不一致，不符上開規定。`,
       message:
         "「申請專利範圍」與說明書記載之符號不一致：" + subMessageArr + "。",
     });
@@ -1000,7 +1140,9 @@ export const generateErrorExp = (essentialData) => {
           claimErrors["對應關係未敘明"][num]
             .map((mainElement) => `「${mainElement}」（第　行）`)
             .join("、") +
-          `等構件，惟該些構件於空間上的安排、配置、連結或其對應關係未敘明，係新型結構特徵揭露明顯不清楚【說明書及圖式應記載獨立項所述構件及其連結關係，請一併檢視確認或修正】。`,
+          `等構件，惟該些構件於空間上的安排、配置、連結或其對應關係未敘明，係${
+            essentialData.applicationNum[3] === "1" ? "發明" : "新型"
+          }結構特徵揭露明顯不清楚【說明書及圖式應記載獨立項所述構件及其連結關係，請一併檢視確認或修正】。`,
       })
     );
   }
@@ -1013,9 +1155,17 @@ export const generateErrorExp = (essentialData) => {
   }
   if (Object.keys(claimErrors["請求項之標的名稱不相符"]).length > 0) {
     essentialData.allErrors_v2.law_112_3.push({
-      prefix: `依專利法施行細則第45條準用第17條第4項規定：新型名稱，應簡明表示所申請新型之內容，不得冠以無關之文字。`,
+      prefix: `依專利法施行細則${
+        essentialData.applicationNum[3] === "1" ? "" : "第45條準用"
+      }第17條第4項規定：${
+        essentialData.applicationNum[3] === "1" ? "發明" : "新型"
+      }名稱，應簡明表示所申請${
+        essentialData.applicationNum[3] === "1" ? "發明" : "新型"
+      }之內容，不得冠以無關之文字。`,
       message:
-        `本案新型名稱「${essentialData.utilityModelTitle}」與` +
+        `本案${
+          essentialData.applicationNum[3] === "1" ? "發明" : "新型"
+        }名稱「${essentialData.utilityModelTitle}」與` +
         Object.keys(claimErrors["請求項之標的名稱不相符"])
           .map(
             (mainElement) =>
@@ -1024,7 +1174,11 @@ export const generateErrorExp = (essentialData) => {
               )}之標的名稱「${mainElement}」`
           )
           .join("、") +
-        `，其範疇內容不相符（新型名稱未能表示所申請新型之內容）。`,
+        `，其範疇內容不相符（${
+          essentialData.applicationNum[3] === "1" ? "發明" : "新型"
+        }名稱未能表示所申請${
+          essentialData.applicationNum[3] === "1" ? "發明" : "新型"
+        }之內容）。`,
     });
   }
   /** reconstructure error */
@@ -1033,8 +1187,12 @@ export const generateErrorExp = (essentialData) => {
     no_law: essentialData.allErrors_v2.no_law,
     law_104: essentialData.allErrors_v2.law_104,
     law_112_3: {
-      lawBody: `揭露方式違反專利法第120條準用第26條第4項規定。【摘要、說明書、申請專利範圍及圖式其餘部分請一併確認及修正】`,
-      lawBodyEnd: `查違反專利法第120條準用第26條第4項規定。【摘要、說明書、申請專利範圍及圖式其餘部分請一併確認及修正】`,
+      lawBody: `揭露方式違反專利法${
+        essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+      }第26條第4項規定。【摘要、說明書、申請專利範圍及圖式其餘部分請一併確認及修正】`,
+      lawBodyEnd: `查違反專利法${
+        essentialData.applicationNum[3] === "1" ? "" : "第120條準用"
+      }第26條第4項規定。【摘要、說明書、申請專利範圍及圖式其餘部分請一併確認及修正】`,
       children: reConstructureLaw(essentialData.allErrors_v2.law_112_3),
     },
     law_112_5: {
@@ -1124,7 +1282,8 @@ const getNameInFigureOfDrawingsMapCorrect = (essentialData, wrongKeys) => {
 const generateInvalidMainElementMessage = (
   mainElement,
   utilityModelTitle,
-  claimNums
+  claimNums,
+  isInvention
 ) => {
   let prevClaimNum = claimNums.shift();
   const rangeSets = [{ from: prevClaimNum }];
@@ -1150,7 +1309,15 @@ const generateInvalidMainElementMessage = (
     }
   });
 
-  return `依專利法施行細則第45條準用第17條第4項之規定：「發明名稱，應簡明表示所申請發明之內容，不得冠以無關之文字。」本案新型名稱「${utilityModelTitle}」內容之記載未依前開規定之格式撰寫（新型名稱「${utilityModelTitle}」與申請專利範圍${rangeText.join(
+  return `依專利法施行細則${
+    isInvention ? "" : "第45條準用"
+  }第17條第4項之規定：「發明名稱，應簡明表示所申請發明之內容，不得冠以無關之文字。」本案${
+    isInvention ? "發明" : "新型"
+  }名稱「${utilityModelTitle}」內容之記載未依前開規定之格式撰寫（${
+    isInvention ? "發明" : "新型"
+  }名稱「${utilityModelTitle}」與申請專利範圍${rangeText.join(
     "、"
-  )}所述標的名稱「${mainElement}」，其名稱用語不相符），應予修正。查違反專利法第120條準用第26條第4項之規定。【摘要、說明書其餘部分請一併確認及修正】`;
+  )}所述標的名稱「${mainElement}」，其名稱用語不相符），應予修正。查違反專利法${
+    isInvention ? "" : "第120條準用"
+  }第26條第4項之規定。【摘要、說明書其餘部分請一併確認及修正】`;
 };

@@ -15,7 +15,7 @@ function getTechFieldAndBackgroundArtAndDisclosure(root, general) {
       let generalStr = general.generalIdx + "";
       techFields.push({
         general: "0".repeat(4 - generalStr.length) + generalStr,
-        content: li.innerText.trim()
+        content: li.innerText.trim(),
       });
       general.generalIdx++;
     });
@@ -23,9 +23,9 @@ function getTechFieldAndBackgroundArtAndDisclosure(root, general) {
   }
 
   // 找先前技術
-  const backgroundArtElement = Array.from(
-    root.querySelectorAll("p")
-  ).filter((p) => p.innerText.match(/【先\s*前\s*技\s*術】/))[0];
+  const backgroundArtElement = Array.from(root.querySelectorAll("p")).filter(
+    (p) => p.innerText.match(/【先\s*前\s*技\s*術】/)
+  )[0];
 
   if (backgroundArtElement?.nextElementSibling?.tagName === "OL") {
     Array.from(
@@ -34,7 +34,7 @@ function getTechFieldAndBackgroundArtAndDisclosure(root, general) {
       let generalStr = general.generalIdx + "";
       backgroundArtFields.push({
         general: "0".repeat(4 - generalStr.length) + generalStr,
-        content: li.innerText.trim()
+        content: li.innerText.trim(),
       });
       general.generalIdx++;
     });
@@ -43,7 +43,7 @@ function getTechFieldAndBackgroundArtAndDisclosure(root, general) {
 
   // 找新型內容
   const disclosureElement = Array.from(root.querySelectorAll("p")).filter((p) =>
-    p.innerText.match(/【新\s*型\s*內\s*容】/)
+    p.innerText.match(/【(新|發)\s*(型|明)\s*內\s*容】/)
   )[0];
 
   if (disclosureElement?.nextElementSibling?.tagName === "OL") {
@@ -53,7 +53,7 @@ function getTechFieldAndBackgroundArtAndDisclosure(root, general) {
       let generalStr = general.generalIdx + "";
       disclosureFields.push({
         general: "0".repeat(4 - generalStr.length) + generalStr,
-        content: li.innerText.trim()
+        content: li.innerText.trim(),
       });
       general.generalIdx++;
     });
@@ -62,5 +62,6 @@ function getTechFieldAndBackgroundArtAndDisclosure(root, general) {
 
   return { techFields, backgroundArtFields, disclosureFields };
 }
+
 
 export default getTechFieldAndBackgroundArtAndDisclosure;

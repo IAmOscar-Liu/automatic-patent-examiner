@@ -1,31 +1,30 @@
-import React, { useContext, useState, useEffect } from "react";
-import "./styles.css";
+import React, { useContext, useEffect, useState } from "react";
 import Dashboard from "./pages/Dashboard";
-// import Abstract from "./pages/Abstract";
-import Abstract from "./pages/Abstract_v2";
-import Disclosure from "./pages/Disclosure";
-import ModeForInvention from "./pages/ModeForInvention";
-import Claims from "./pages/Claims";
-import SimpleClaims from "./pages/SimpleClaims";
-import SimpleDescription from "./pages/SimpleDescription";
+import "./styles.css";
+import { Link, Route, HashRouter as Router, Switch } from "react-router-dom";
+import Popup from "reactjs-popup";
+import DBResultPopup from "./components/DbResultPopup";
+import DescriptionOfDrawings from "./components/DescriptionOfDrawings";
+import DescriptionOfElement from "./components/DescriptionOfElement";
+import FailedElements from "./components/FailedElements";
+import FigureOfDrawings from "./components/FigureOfDrawings";
+import MainTitle from "./components/MainTitle";
+import SettingsPopup from "./components/SettingsPopup";
 import SidebarLayout from "./components/SidebarLayout";
-import Readme from "./pages/readme";
-import Result from "./pages/result";
-import { useLoadXML } from "./hooks/loadXML";
-import { useInit } from "./hooks/init";
-import { XMLContextProvider } from "./contexts/XMLContext";
 import { EssentialDataContextProvider } from "./contexts/EssentialDataContext";
 import { UpdateParagraphContextProvider } from "./contexts/UpdateParagraphContext";
-import { HashRouter as Router, Switch, Route, Link } from "react-router-dom";
-import DescriptionOfElement from "./components/DescriptionOfElement";
-import FigureOfDrawings from "./components/FigureOfDrawings";
-import DescriptionOfDrawings from "./components/DescriptionOfDrawings";
-import FailedElements from "./components/FailedElements";
+import { XMLContextProvider } from "./contexts/XMLContext";
+import { useInit } from "./hooks/init";
+import { useLoadXML } from "./hooks/loadXML";
 import { reInit } from "./hooks/reInit";
-import SettingImg from "./assets/setting.png";
-import Popup from "reactjs-popup";
-import SettingsPopup from "./components/SettingsPopup";
-import DBResultPopup from "./components/DbResultPopup";
+import Abstract from "./pages/Abstract_v2";
+import Claims from "./pages/Claims";
+import Disclosure from "./pages/Disclosure";
+import ModeForInvention from "./pages/ModeForInvention";
+import SimpleClaims from "./pages/SimpleClaims";
+import SimpleDescription from "./pages/SimpleDescription";
+import Readme from "./pages/readme";
+import Result from "./pages/result";
 import { getPathName } from "./utils/getPathName";
 
 export default function App({ setLocalStorageValue }) {
@@ -37,7 +36,7 @@ export default function App({ setLocalStorageValue }) {
   const {
     setAllUpdateDisclosureParagraph,
     setAllUpdateModeForInventionParagraph,
-    setAllUpdateClaimParagraph
+    setAllUpdateClaimParagraph,
   } = useContext(UpdateParagraphContextProvider);
 
   const [isSettingPopupOpen, toggleIsSettingPopupOpen] = useState(false);
@@ -70,7 +69,7 @@ export default function App({ setLocalStorageValue }) {
         essentialData.pathName === "read-mode"
           ? {
               width: "150%",
-              marginLeft: "-50%"
+              marginLeft: "-50%",
             }
           : {}
       }
@@ -88,77 +87,10 @@ export default function App({ setLocalStorageValue }) {
       >
         <div>
           <Router>
-            <h1 id="main-title">
-              <span
-                style={
-                  essentialData.pathName === "read-mode"
-                    ? { display: "none" }
-                    : {}
-                }
-              >
-                {" "}
-                <Link to="/readme">
-                  使用
-                  <br />
-                  指南
-                </Link>
-              </span>
-              {essentialData.pathName === "read-mode" ? (
-                <>
-                  <span>
-                    <Link to="/">
-                      返{"    "}回
-                      <br />
-                      標準模式
-                    </Link>
-                  </span>
-                  <i
-                    onClick={() =>
-                      setEssentialData((prev) => ({
-                        ...prev,
-                        personalSettings: {
-                          ...essentialData.personalSettings,
-                          readingModePureText: !essentialData.personalSettings
-                            .readingModePureText
-                        }
-                      }))
-                    }
-                  >
-                    {essentialData.personalSettings.readingModePureText
-                      ? "互動式"
-                      : "純文字"}
-                    <br />
-                    閱讀
-                  </i>
-                </>
-              ) : (
-                <span>
-                  <Link to="/read-mode">
-                    閱讀
-                    <br />
-                    模式
-                  </Link>
-                </span>
-              )}
-              <img
-                onClick={() => toggleIsSettingPopupOpen(true)}
-                className="setting-icon"
-                src={SettingImg}
-                alt=""
-              />
-              {essentialData.dbResultMap &&
-                Object.keys(essentialData.dbResultMap).length > 0 && (
-                  <i
-                    className="db-result"
-                    onClick={() => toggleIsDBResultPopupOpen(true)}
-                  >
-                    資料庫
-                    <br />
-                    搜尋結果
-                  </i>
-                )}
-              自動化專利審查系統
-            </h1>
+            <MainTitle
+              toggleIsDBResultPopupOpen={toggleIsDBResultPopupOpen}
+              toggleIsSettingPopupOpen={toggleIsSettingPopupOpen}
+            />
             <Popup
               open={isSettingPopupOpen}
               closeOnDocumentClick
@@ -212,7 +144,10 @@ export default function App({ setLocalStorageValue }) {
                     to="/disclosure"
                   >
                     {essentialData.applicationNum === ""
-                      ? "發明/新型"
+                      ? process.env.REACT_APP_SYSTEM_TYPE === "tipo" &&
+                        process.env.REACT_APP_PATENT_TYPE?.includes("invention")
+                        ? "發明/新型"
+                        : "新型"
                       : essentialData.applicationNum[3] === "1"
                       ? "發明"
                       : "新型"}
@@ -243,9 +178,11 @@ export default function App({ setLocalStorageValue }) {
                 </li>
               </ul>
               <div className="analysis-result">
-                <span>
-                  <Link to="/result">分析結果</Link>
-                </span>
+                {process.env.REACT_APP_SYSTEM_TYPE === "tipo" && (
+                  <span>
+                    <Link to="/result">分析結果</Link>
+                  </span>
+                )}
               </div>
             </section>
             <div

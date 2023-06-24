@@ -34,7 +34,31 @@ const Result = () => {
         copyContent.push(labelEl.textContent);
       }
     }
-    navigator.clipboard.writeText(copyContent.join("\n"));
+    //navigator.clipboard.writeText(copyContent.join("\n"));
+
+    // Navigator clipboard api needs a secure context (https)
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(copyContent.join("\n"));
+    } else {
+      // Use the 'out of viewport hidden text area' trick
+      const textArea = document.createElement("textarea");
+      textArea.value = copyContent.join("\n");
+
+      // Move textarea out of the viewport so it's not visible
+      textArea.style.position = "absolute";
+      textArea.style.left = "-999999px";
+
+      document.body.prepend(textArea);
+      textArea.select();
+
+      try {
+        document.execCommand("copy");
+      } catch (error) {
+        console.error(error);
+      } finally {
+        textArea.remove();
+      }
+    }
   };
 
   /*
@@ -226,7 +250,9 @@ const Result = () => {
                   專利法第104條
                   {isCopying.law_104 ? (
                     <div className="result-v2-title-btns">
-                      <button onClick={handleCopy}>確定</button>
+                      <button className="with-active" onClick={handleCopy}>
+                        確定
+                      </button>
                       <button
                         onClick={() =>
                           toggleIsCopying((prev) => ({
@@ -281,7 +307,9 @@ const Result = () => {
                   專利法第112條第3款{" "}
                   {isCopying.law_112_3 ? (
                     <div className="result-v2-title-btns">
-                      <button onClick={handleCopy}>確定</button>
+                      <button className="with-active" onClick={handleCopy}>
+                        確定
+                      </button>
                       <button
                         onClick={() =>
                           toggleIsCopying((prev) => ({
@@ -338,10 +366,12 @@ const Result = () => {
                   <>
                     <div className="result-v2-lawbody">
                       <ToggleDisp isSelecting={isCopying.law_112_3} icon="◎">
-                        {
-                          essentialData.allErrors_v2.structuredResult.law_112_3
-                            .lawBody
-                        }
+                        <span>
+                          {
+                            essentialData.allErrors_v2.structuredResult
+                              .law_112_3.lawBody
+                          }
+                        </span>
                       </ToggleDisp>
                     </div>
                     {essentialData.allErrors_v2.structuredResult.law_112_3.children.map(
@@ -387,7 +417,9 @@ const Result = () => {
                   專利法第112條第5款
                   {isCopying.law_112_5 ? (
                     <div className="result-v2-title-btns">
-                      <button onClick={handleCopy}>確定</button>
+                      <button className="with-active" onClick={handleCopy}>
+                        確定
+                      </button>
                       <button
                         onClick={() =>
                           toggleIsCopying((prev) => ({
@@ -444,10 +476,12 @@ const Result = () => {
                   <>
                     <div className="result-v2-lawbody">
                       <ToggleDisp isSelecting={isCopying.law_112_5} icon="◎">
-                        {
-                          essentialData.allErrors_v2.structuredResult.law_112_5
-                            .lawBody
-                        }
+                        <span>
+                          {
+                            essentialData.allErrors_v2.structuredResult
+                              .law_112_5.lawBody
+                          }
+                        </span>
                       </ToggleDisp>
                     </div>
                     {essentialData.allErrors_v2.structuredResult.law_112_5.children.map(
@@ -492,7 +526,9 @@ const Result = () => {
                   未帶法條（其他）
                   {isCopying.no_law ? (
                     <div className="result-v2-title-btns">
-                      <button onClick={handleCopy}>確定</button>
+                      <button className="with-active" onClick={handleCopy}>
+                        確定
+                      </button>
                       <button
                         onClick={() =>
                           toggleIsCopying((prev) => ({
@@ -547,7 +583,9 @@ const Result = () => {
                   系統無法判別之錯誤
                   {isCopying.system_fail ? (
                     <div className="result-v2-title-btns">
-                      <button onClick={handleCopy}>確定</button>
+                      <button className="with-active" onClick={handleCopy}>
+                        確定
+                      </button>
                       <button
                         onClick={() =>
                           toggleIsCopying((prev) => ({

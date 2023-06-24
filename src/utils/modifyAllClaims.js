@@ -21,7 +21,7 @@ export const modifyAllClaims = async (
     figureOfDrawingsMap,
     applicationNum,
     personalSettings,
-    dbResultMap
+    dbResultMap,
   },
   oldClaimDetails,
   manuallyAddValues
@@ -83,8 +83,8 @@ export const modifyAllClaims = async (
         ...descriptionOfElementMap[cur].values.map((value) => ({
           key: cur,
           value,
-          from: "d"
-        }))
+          from: "d",
+        })),
       ],
       []
     );
@@ -99,7 +99,7 @@ export const modifyAllClaims = async (
           allElements.push({
             key,
             value: v,
-            from: "f"
+            from: "f",
           });
         }
       })
@@ -109,7 +109,7 @@ export const modifyAllClaims = async (
     allElements.push({
       key: "utilityModelTitle",
       value: utilityModelTitle.replace(/[↵\n]/g, "").trim(),
-      from: "t"
+      from: "t",
     });
   }
 
@@ -118,7 +118,7 @@ export const modifyAllClaims = async (
       allElements.push({
         key: "manuallyAddValue",
         value: manuallyAddValue,
-        from: "m"
+        from: "m",
       });
     });
   }
@@ -140,7 +140,7 @@ export const modifyAllClaims = async (
           concatRegExps[stringToUnicode(value.slice(2))] = {
             prefixes: [value.slice(0, 2)],
             main: value.slice(2),
-            symetric: false
+            symetric: false,
           };
         }
       } else if (RegExp(`^[${symetricPrefix()}]`).test(value)) {
@@ -153,7 +153,7 @@ export const modifyAllClaims = async (
           concatRegExps[stringToUnicode(value.slice(1))] = {
             prefixes: [value.slice(0, 1)],
             main: value.slice(1),
-            symetric: true
+            symetric: true,
           };
         }
       }
@@ -185,7 +185,7 @@ export const modifyAllClaims = async (
               [
                 regExps[0].slice(0, i),
                 `[\\u4E00-\\u9FFF]`,
-                regExps[0].slice(i + 1)
+                regExps[0].slice(i + 1),
               ].join("") + "|";
           }
         } /* else {
@@ -310,7 +310,7 @@ export const modifyAllClaims = async (
     const rest = [
       ...claim.errors,
       ...claim.usedElements,
-      ...claim.preUsedElements
+      ...claim.preUsedElements,
     ].sort((a, b) => a.start - b.start);
 
     claim.matches = checkclaimSymbol(
@@ -441,7 +441,7 @@ function checkclaimSymbol(
             start: match.start,
             end: match.end,
             name: match.fullValue || match.value,
-            wrongKeys: [key]
+            wrongKeys: [key],
           };
           if (
             !claim.errors.find(
@@ -466,7 +466,7 @@ function checkclaimSymbol(
                 message: `「${match.value}（${newWrongKeys.join(
                   "）、（"
                 )}）」的元件名稱或符號錯誤`,
-                wrongKeys: newWrongKeys
+                wrongKeys: newWrongKeys,
               };
             }
           }
@@ -563,7 +563,7 @@ function checkclaimSymbol(
           keyMatch[0]
         }」的符號未置於括號內`,
         start: match.start,
-        end: match.end
+        end: match.end,
       };
       if (!claim.errors.find((err) => err.start === errorData.start)) {
         claim.errors.push(errorData);
@@ -600,7 +600,7 @@ function checkclaimSymbol(
             start: match.start,
             end: match.end,
             name: match.fullValue || match.value,
-            wrongKeys: [k]
+            wrongKeys: [k],
           };
           if (
             !claim.errors.find(
@@ -625,7 +625,7 @@ function checkclaimSymbol(
                 message: `「${
                   match.fullValue || match.value
                 }（${newWrongKeys.join("）、（")}）」的元件名稱或符號錯誤`,
-                wrongKeys: newWrongKeys
+                wrongKeys: newWrongKeys,
               };
             }
           }
@@ -689,7 +689,7 @@ export function highlightClaimContent(
     ...claim.matches,
     ...claim.usedElements,
     ...claim.preUsedElementsNonUsed,
-    ...claim.errors
+    ...claim.errors,
   ]
     .sort((a, b) => b.start - a.start)
     .forEach(
@@ -713,7 +713,7 @@ export function highlightClaimContent(
         isMainElement,
         indexOfMatch,
         hasBeenModified,
-        isMainComp
+        isMainComp,
       }) => {
         if (message) {
           highlightBlocks.push({
@@ -722,7 +722,7 @@ export function highlightClaimContent(
             endTag: "",
             startTag: "",
             message,
-            errorContent
+            errorContent,
           });
         } else if (type === "usedElement") {
           const startTag = `<span class="usedElement u-${group} ${
@@ -742,14 +742,14 @@ export function highlightClaimContent(
             start,
             end,
             endTag: `</span>`,
-            startTag
+            startTag,
           });
           if (hasOuterKey && !keyBeenModified) {
             highlightBlocks.push({
               start: keyStart,
               end: keyEnd,
               endTag: `</span>`,
-              startTag
+              startTag,
             });
           }
         } else if (type === "preUsedElements") {
@@ -777,14 +777,14 @@ export function highlightClaimContent(
             start,
             end,
             endTag: `</span>`,
-            startTag
+            startTag,
           });
           if (hasOuterKey && !keyBeenModified) {
             highlightBlocks.push({
               start: keyStart,
               end: keyEnd,
               endTag: `</span>`,
-              startTag
+              startTag,
             });
           }
         } else {
@@ -817,7 +817,7 @@ export function highlightClaimContent(
             end,
             endTag: `</span>`,
             startTag,
-            isMainElement
+            isMainElement,
           });
           if (hasOuterKey && !keyBeenModified) {
             highlightBlocks.push({
@@ -825,7 +825,7 @@ export function highlightClaimContent(
               end: keyEnd,
               endTag: `</span>`,
               startTag,
-              isMainElement
+              isMainElement,
             });
           }
         }
@@ -847,6 +847,14 @@ export function highlightClaimContent(
             modifiedClaim.slice(0, highlight.start) +
             "<span class='err-span'>。</span>" +
             modifiedClaim.slice(highlight.end);
+        } else if (/請求項未以單句為之\(無句號\)/.test(highlight.message)) {
+          modifiedClaim =
+            modifiedClaim +
+            `<span class='err-span' 
+                   style='border-radius: 10000000px;
+                   font-size: 0.8em;
+                   padding: .1em .3em;'
+             ><code>◎</code>句尾無句號</span>`;
         } else if (
           /未以選擇式為之$/.test(highlight.message) ||
           /^附屬項文字開頭/.test(highlight.message) ||
@@ -880,7 +888,7 @@ export function highlightClaimContent(
         modifiedClaim = [
           modifiedClaim.slice(0, highlight.end),
           highlight.endTag,
-          modifiedClaim.slice(highlight.end)
+          modifiedClaim.slice(highlight.end),
         ].join("");
 
         // Test
@@ -905,14 +913,14 @@ export function highlightClaimContent(
           modifiedClaim = [
             modifiedClaim.slice(0, highlight.start),
             mainEl,
-            modifiedClaim.slice(highlight.end)
+            modifiedClaim.slice(highlight.end),
           ].join("");
         }
 
         modifiedClaim = [
           modifiedClaim.slice(0, highlight.start),
           highlight.startTag,
-          modifiedClaim.slice(highlight.start)
+          modifiedClaim.slice(highlight.start),
         ].join("");
       }
     });
@@ -977,7 +985,7 @@ function findAllUsedElements(claims, claim, prevItem, start, value) {
         start: mm.index,
         type: "usedElement",
         value: mm[0],
-        claimNum: currentClaimNum
+        claimNum: currentClaimNum,
       });
     });
   } while (searchClaimsNum.length > 0);
@@ -990,7 +998,7 @@ function getValues(key, descriptionOfElementMap, figureOfDrawingsMap) {
       []),
     ...((figureOfDrawingsMap[key] &&
       figureOfDrawingsMap[key].values.filter((v) => v !== "")) ||
-      [])
+      []),
   ];
 
   Object.keys(descriptionOfElementMap)
@@ -1003,7 +1011,7 @@ function getValues(key, descriptionOfElementMap, figureOfDrawingsMap) {
 function isValueExisted(value, descriptionOfElementMap, figureOfDrawingsMap) {
   return [
     ...Object.values(descriptionOfElementMap),
-    ...Object.values(figureOfDrawingsMap)
+    ...Object.values(figureOfDrawingsMap),
   ]
     .map((v) => v.values)
     .flat()

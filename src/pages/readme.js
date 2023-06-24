@@ -10,7 +10,7 @@ const Readme = () => {
   useEffect(() => {
     setEssentialData((prev) => ({
       ...prev,
-      pathName: getPathName()
+      pathName: getPathName(),
     }));
   }, []);
 
@@ -38,7 +38,7 @@ const Readme = () => {
     "在「請求項文字內容」中將滑鼠移至「該」或「所述」開頭的構件上方時，會出現tooltip告知該構件先前的位置與所在的請求項，點擊該構件一下可取消(開啟)同樣名稱構件的highlight，點擊該構件兩下可修正該構件名稱。",
     "承上，操作「修正元件名稱」面板時，以「可選擇的文字」頭尾的按鈕調整選取範圍，下方的「選取的文字」即為目前的選取範圍，若該元件名稱為簡寫(e.g. 系統，其全名應為通訊系統)，則於「對應的元件名稱」欄輸入該元件名稱的全名。最後，如果只想修改單一元件名稱，最下面的「套用至全部元件」無須打勾，若想一次修改全部的元件名稱，最下面的「套用至全部元件」要打勾。",
     "「新型內容」、「實施方式」及「申請專範圍」頁面的右上角有個「搜尋」按鈕，點選後可輸入欲搜尋的文字，按下「送出」後該些被搜尋到的文字會被highlight。",
-    "主選單中的「分析結果」會將整件案子的錯誤統整並製成法條，以供專利審查人員參考。"
+    "主選單中的「分析結果」會將整件案子的錯誤統整並製成法條，以供專利審查人員參考。",
   ];
 
   const types = [
@@ -61,7 +61,7 @@ const Readme = () => {
     "「新型名稱」是否與「申請專利範圍」之請求項的標的名稱其名稱用語不相符。",
     "檢查本案「新型內容」及「實施方式」中是否有「原住民之相關用語」。",
     "檢查本案是否有「系統無法判別」之「符號說明」與「代表圖之符號簡單說明」所述之元件名稱及符號。",
-    "檢查本案是否有「系統無法判別」之「申請專利範圍」之請求項內容。"
+    "檢查本案是否有「系統無法判別」之「申請專利範圍」之請求項內容。",
   ];
 
   return (
@@ -70,13 +70,21 @@ const Readme = () => {
         <h1>使用指南</h1>
       </section>
       <section className="readme-content">
-        <p>【軟體名稱】 自動化專利審查系統</p>
+        <p>
+          【軟體名稱】{" "}
+          {process.env.REACT_APP_SYSTEM_TYPE === "tipo"
+            ? "自動化專利審查系統"
+            : "專利申請文件輔助偵錯系統"}
+        </p>
         <p>
           【軟體目的】
           <br />
           <span style={{ display: "block", paddingLeft: ".7em" }}>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            協助專利審查人員加速審理新型專利案件，本軟體可以檢查「符號說明」及「代表圖之符號簡單明」元件、符號是否錯誤或重複，以及「新型內容」，「實施方式」之元件和符號是否與「符號說明」不一致，並且檢查「申請專利範圍」之元件是否有未出現在先前內容的情況。
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 協助專利
+            {process.env.REACT_APP_SYSTEM_TYPE === "tipo"
+              ? "審查人員加速審理"
+              : "申請人檢查"}
+            新型/發明專利案件，本軟體可以檢查「符號說明」及「代表圖之符號簡單明」元件、符號是否錯誤或重複，以及「新型內容」，「實施方式」之元件和符號是否與「符號說明」不一致，並且檢查「申請專利範圍」之元件是否有未出現在先前內容的情況。
           </span>
         </p>
         <div>
@@ -88,8 +96,8 @@ const Readme = () => {
                   ...prev,
                   readMeOptions: {
                     ...prev.readMeOptions,
-                    showUsage: !prev.readMeOptions.showUsage
-                  }
+                    showUsage: !prev.readMeOptions.showUsage,
+                  },
                 }))
               }
             >
@@ -118,9 +126,9 @@ const Readme = () => {
                   ...prev,
                   readMeOptions: {
                     ...prev.readMeOptions,
-                    showDetectableErrors: !prev.readMeOptions
-                      .showDetectableErrors
-                  }
+                    showDetectableErrors:
+                      !prev.readMeOptions.showDetectableErrors,
+                  },
                 }))
               }
             >

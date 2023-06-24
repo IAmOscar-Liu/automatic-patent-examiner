@@ -11,15 +11,15 @@ import getTitle from "./getTitle";
 function parseHTML(html) {
   const root = parse(html);
 
-  // 找中英文新型名稱
-  const { title, titleEn, titleElement } = getTitle(root);
+  // 找中英文新型/發明名稱
+  const { patentType, title, titleEn, titleElement } = getTitle(root);
 
   // 找中英文摘要
   const { abstract, abstractEn } = getAbstract(titleElement);
 
   const general = { generalIdx: 1 };
 
-  // 找技術領域、先前技術、新型內容
+  // 找技術領域、先前技術、新型/發明內容
   const {
     techFields,
     backgroundArtFields,
@@ -42,6 +42,7 @@ function parseHTML(html) {
   const { descriptionOfElementFields } = getDescriptionDrawings(root);
 
   return {
+    patentType,
     title,
     titleEn,
     abstract,

@@ -2,6 +2,38 @@ import { useState, useEffect } from "react";
 
 const KEY = "automatic-patent-examiner";
 
+const isValidLocalStorage = (jsonValue) => {
+  try {
+    if (
+      typeof jsonValue.isDarkMode !== "boolean" ||
+      typeof jsonValue.fontSize !== "number" ||
+      typeof jsonValue.openTooltip !== "boolean" ||
+      typeof jsonValue.showClaimElementKey !== "boolean" ||
+      typeof jsonValue.synchronizeHighlight !== "boolean" ||
+      typeof jsonValue.readingModePureText !== "boolean" ||
+      typeof jsonValue.useDatabase !== "boolean" ||
+      typeof jsonValue.savedApplications !== "object"
+    )
+      return false;
+
+    for (let key of Object.keys(jsonValue.savedApplications)) {
+      for (let item of jsonValue.savedApplications[key]) {
+        if (
+          typeof item.appId !== "string" ||
+          typeof item.appTitle !== "string" ||
+          typeof item.latestTS !== "number"
+        )
+          return false;
+      }
+    }
+
+    return true;
+  } catch (error) {
+    console.log("Fail to parse localStorate");
+    return false;
+  }
+};
+
 const useLocalStorage = (initialValue) => {
   const getLocalStorage = () => {
     try {
@@ -22,9 +54,16 @@ const useLocalStorage = (initialValue) => {
 
   const [value, setValue] = useState(() => {
     const jsonValue = getLocalStorage();
-    if (jsonValue !== null) {
-      let oldValue = JSON.parse(jsonValue);
-      oldValue = { ...initialValue, ...oldValue };
+    let oldValue = JSON.parse(jsonValue || "{}");
+    if (isValidLocalStorage(oldValue)) {
+      oldValue = {
+        ...initialValue,
+        ...oldValue,
+        useDatabase:
+          process.env.REACT_APP_SYSTEM_TYPE === "tipo"
+            ? oldValue.useDatabase
+            : false,
+      };
 
       if (
         oldValue.savedApplications &&

@@ -297,7 +297,7 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
             否&nbsp;&nbsp;
           </label>
         </p>
-        <p>
+        {process.env.REACT_APP_SYSTEM_TYPE === "tipo" && <p>
           連接資料庫來尋找請求項的構件(須有網路連線，且無法在本機上使用)：
           <label>
             <input
@@ -341,7 +341,7 @@ const SettingsPopup = ({ setLocalStorageValue, handleClose }) => {
             />
             否&nbsp;&nbsp;
           </label>
-        </p>
+        </p>}
       </div>
       <p>
         <button onClick={resetPersonalSettings}>回復原始設定</button>

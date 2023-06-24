@@ -296,6 +296,8 @@
 .App .side > div .sidebar-h1 > p {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  min-height: 58px;
   font-size: 0.63em;
   font-weight: 500;
   background-color: rgb(68 112 69);
@@ -642,8 +644,9 @@
 }
 
 .App #main-title::before {
-  content: "專利一組四科 劉克群製作\A 版本: 2023/5/18";
+  content: "專利一組四科 劉克群製作\A 版本: 2023/6/2";
   top: 12px;
+  line-height: 1.35;
 }
 
 .App #main-title::after {
@@ -1309,6 +1312,10 @@
   background: #447045;
 }
 
+.App .paragraph-container .paragraph-container-btns button.copy-btn:active {
+  background: limegreen;
+}
+
 .App .paragraph-container .error {
   background-color: red;
   color: rgb(233 251 89);
@@ -1644,13 +1651,18 @@
 }
 
 .law-group label:has(> input[type="checkbox"]) {
-  background: rgba(255, 0, 0, 0.3);
-  text-decoration: line-through;
+  background: rgba(255, 255, 0, 0.15);
+  /* text-decoration: underline; */
 }
 
-.law-group label:has(> input[type="checkbox"]:checked) {
-  background: rgba(255, 255, 0, 0.3);
-  text-decoration: underline;
+.law-group label:has(> input[type="checkbox"]:not(:checked)) {
+  background: rgba(255, 0, 0, 0.15);
+  /* text-decoration: line-through; */
+}
+
+.law-group label:has(> input[type="checkbox"]:not(:checked)) span {
+  color: #8c8c8c !important;
+  text-decoration: line-through;
 }
 
 .result-v2-title-btns {
@@ -1667,6 +1679,15 @@
   cursor: pointer;
   background: chocolate;
   font-size: 0.7em;
+}
+
+.result-v2-title-btns > button.with-active {
+  background: #52f26d;
+  color: #51614f;
+}
+
+.result-v2-title-btns > button.with-active:active {
+  background: limegreen;
 }
 
 .result-v2-ul {
@@ -1698,6 +1719,10 @@
   color: black;
   padding: 3px 9px 3px 12px;
   border-radius: 10px;
+}
+
+.result-v2-lawbody > label {
+  background: transparent !important;
 }
 
 .result-v2-prefix {

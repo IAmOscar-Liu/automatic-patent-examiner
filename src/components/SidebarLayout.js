@@ -42,10 +42,12 @@ const SidebarLayout = ({ children }) => {
           元件名稱與符號
           {XMLData.applicationNum && essentialData.utilityModelTitle && (
             <p>
-              <span>
-                {XMLData.applicationNum[3] === "1" ? "發明" : "新型"}案號：
-                <i>{XMLData.applicationNum}</i>
-              </span>
+              {!XMLData.applicationNum.endsWith("X") && (
+                <span>
+                  {XMLData.applicationNum[3] === "1" ? "發明" : "新型"}案號：
+                  <i>{XMLData.applicationNum}</i>
+                </span>
+              )}
               <span>
                 {XMLData.applicationNum[3] === "1" ? "發明" : "新型"}名稱：
                 {essentialData.utilityModelTitle}
@@ -60,7 +62,7 @@ const SidebarLayout = ({ children }) => {
             document.querySelector(".App .side").scrollTo({
               top: 0,
               left: 0,
-              behavior: "smooth"
+              behavior: "smooth",
             });
             toggleHide(true);
           }}
