@@ -20,7 +20,7 @@ const UpdateParagraphContext = ({ children }) => {
   const [savedFileContent, setSavedFileContent] = useState({
     content: "",
     textAreaValue: "",
-    isInEditingMode: true
+    isInEditingMode: process.env.REACT_APP_SYSTEM_TYPE === "tipo",
   });
 
   return (

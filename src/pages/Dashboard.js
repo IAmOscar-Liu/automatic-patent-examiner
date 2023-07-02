@@ -187,30 +187,34 @@ const Dashboard = () => {
         </Popup>
       </section>
       <section className="dashboard-section">
-        <div className="dashboard-section-btns">
-          <button
-            className={savedFileContent.isInEditingMode ? "active" : ""}
-            onClick={() =>
-              setSavedFileContent((prev) => ({
-                ...prev,
-                isInEditingMode: true,
-              }))
-            }
-          >
-            貼上XML資料
-          </button>
-          <button
-            className={savedFileContent.isInEditingMode ? "" : "active"}
-            onClick={() =>
-              setSavedFileContent((prev) => ({
-                ...prev,
-                isInEditingMode: false,
-              }))
-            }
-          >
-            選取XML或WORD檔案
-          </button>
-        </div>
+        {process.env.REACT_APP_SYSTEM_TYPE === "tipo" ? (
+          <div className="dashboard-section-btns">
+            <button
+              className={savedFileContent.isInEditingMode ? "active" : ""}
+              onClick={() =>
+                setSavedFileContent((prev) => ({
+                  ...prev,
+                  isInEditingMode: true,
+                }))
+              }
+            >
+              貼上xml型式資料
+            </button>
+            <button
+              className={savedFileContent.isInEditingMode ? "" : "active"}
+              onClick={() =>
+                setSavedFileContent((prev) => ({
+                  ...prev,
+                  isInEditingMode: false,
+                }))
+              }
+            >
+              選取xml或docx檔案
+            </button>
+          </div>
+        ) : (
+          <div style={{ height: 25 }}></div>
+        )}
         {!savedFileContent.isInEditingMode && (
           <p style={{ color: "red", marginBottom: 10, fontWeight: "bold" }}>
             WORD檔案僅支援

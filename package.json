@@ -27,6 +27,9 @@
   "devDependencies": {
     "typescript": "3.8.3"
   },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
