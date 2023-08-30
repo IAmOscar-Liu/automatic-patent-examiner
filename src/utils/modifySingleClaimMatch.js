@@ -40,7 +40,8 @@ export const modifySingleClaimMatch = (
       claim.mainElement = claim.matches[0].value.replace(/[↵\n]/g, "").trim();
     } else if (claim.type === "independent") {
       const myMainElement = claim.content
-        .split(/[:，;。]/)[0]
+        .split("@##@")[0]
+        .split(/[:;：；，。]/)[0]
         .match(
           `^一種?(如(${claimStartTerms}).*?(所述之|所述的|所述|之|的))?(.*)`
         );
@@ -59,12 +60,14 @@ export const modifySingleClaimMatch = (
       }
     } else if (claim.type === "additional") {
       let myMainElement = claim.content
-        .split(/[:，;。]/)[0]
+        .split("@##@")[0]
+        .split(/[:;：；，。]/)[0]
         .match(`(.*(${claimStartTerms}).+?(所述之|所述的|所述|之|的))(.*)`);
 
       if (!myMainElement) {
         myMainElement = claim.content
-          .split(/[:，;。]/)[0]
+          .split("@##@")[0]
+          .split(/[:;：；，。]/)[0]
           .match(`(.*(${claimStartTerms}).*?([0-9]+項?))(.*)`);
       }
 
@@ -113,7 +116,7 @@ export const modifySingleClaimMatch = (
           // color: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
           //   Math.random() * 255
           // )}, ${Math.floor(Math.random() * 255)}, .7)`
-          color: pickColor(Object.keys(elementColorMap).length)
+          color: pickColor(Object.keys(elementColorMap).length),
         };
       }
       claim.matches[0] = {
@@ -148,7 +151,7 @@ export const modifySingleClaimMatch = (
         end:
           claim.content.indexOf(claim.mainElement) + claim.mainElement.length,
         // pathIsOK: claim.type === "independent" ? true : false,
-        isMainElement: true
+        isMainElement: true,
       };
       // applicationNum[3] !== "1" &&
       if (claim.type === "independent") {
@@ -195,7 +198,9 @@ export const modifySingleClaimMatch = (
       ).index + claim.mainElement.length
     ).length;
     */
-    contentFirstIndex = claim.content.split(/[:，;。]/)[0].length;
+    contentFirstIndex = claim.content
+      .split("@##@")[0]
+      .split(/[:;：；，。]/)[0].length;
 
     if (claim.matches.length === 1) {
       claim.matches = [
@@ -221,7 +226,7 @@ export const modifySingleClaimMatch = (
           figureOfDrawingsMap,
           allModeForInventionParagraphDetails,
           manuallyAddValues
-        )
+        ),
       ].map((mt, indexOfMatch) => ({ ...mt, indexOfMatch }));
     } // if: find all claim.matches
 
@@ -234,7 +239,7 @@ export const modifySingleClaimMatch = (
       prevMatchedElement: null,
       prevMatchPerPath: [],
       longestPrevMatch: "",
-      preserveValue: false // 是不被　user 要求 preserveValue
+      preserveValue: false, // 是不被　user 要求 preserveValue
     }));
     // Test
     // console.log(claim.matches);
@@ -247,7 +252,7 @@ export const modifySingleClaimMatch = (
         ? "無法判斷此請求項為獨立項或附屬項"
         : `分析此請求項時發生問題: ${err.message}`,
       start: -100,
-      end: -99
+      end: -99,
     });
   } finally {
     return contentFirstIndex;

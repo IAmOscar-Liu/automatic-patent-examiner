@@ -14,7 +14,8 @@ const Root = () => {
     ...defaultPersonalSettings,
   });
 
-  const sessionKey = process.env.REACT_APP_TIPO_SESSION_KEY;
+  // const sessionKey = process.env.REACT_APP_TIPO_SESSION_KEY;
+  const sessionKey = "";
 
   if (!sessionKey || parseTipoCookie(document.cookie)[sessionKey])
     return (

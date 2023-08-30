@@ -1,5 +1,5 @@
 export const figWithRangeStart = RegExp(
-  /^圖\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?(\s*[-~～到至]?\s*圖?\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?)?/gi
+  /^圖\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?(\s*[-~～到至]\s*圖?\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?)?/gi
 );
 
 export const figWithCommaStart = RegExp(
@@ -7,7 +7,7 @@ export const figWithCommaStart = RegExp(
 );
 
 export const figWithRangeBetween = RegExp(
-  /圖\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?(\s*[-~～到至]?\s*圖?\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?)?/gi
+  /圖\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?(\s*[-~～到至]\s*圖?\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?)?/gi
 );
 
 export const figWithCommaBetween = RegExp(
@@ -15,7 +15,7 @@ export const figWithCommaBetween = RegExp(
 );
 
 export const figWithThisRangeStart = RegExp(
-  /^第\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?圖?(\s*[-~～到至]?\s*第?\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?)?圖/gi
+  /^第\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?圖?(\s*[-~～到至]\s*第?\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?)?圖/gi
 );
 
 export const figWithThisCommaStart = RegExp(
@@ -23,7 +23,7 @@ export const figWithThisCommaStart = RegExp(
 );
 
 export const figWithThisRangeBetween = RegExp(
-  /第\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?圖?(\s*[-~～到至]?\s*第?\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?)?圖/gi
+  /第\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?圖?(\s*[-~～到至]\s*第?\(?[\u03B1-\u09B6θa-z0-9一二三四五六七八九十(]+['”′″]?\)?)?圖/gi
 );
 
 export const figWithThisCommaBetween = RegExp(
@@ -48,11 +48,11 @@ export const figStartMatch = (key) => {
 export const allFigBetweenMatch = (paragraph) => {
   const allCommaMatch = [
     ...paragraph.matchAll(figWithCommaBetween),
-    ...paragraph.matchAll(figWithThisCommaBetween)
+    ...paragraph.matchAll(figWithThisCommaBetween),
   ];
   const allRangeMatch = [
     ...paragraph.matchAll(figWithRangeBetween),
-    ...paragraph.matchAll(figWithThisRangeBetween)
+    ...paragraph.matchAll(figWithThisRangeBetween),
   ];
 
   const allMatches = [...allCommaMatch, ...allRangeMatch].sort(
@@ -64,7 +64,7 @@ export const allFigBetweenMatch = (paragraph) => {
     const tmp = allMatches.shift();
 
     if (
-      tmp.index >
+      tmp.index >=
       (finalMatches[finalMatches.length - 1]?.index ?? -1) +
         (finalMatches[finalMatches.length - 1]?.[0].length ?? 0)
     ) {

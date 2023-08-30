@@ -3,10 +3,10 @@ import { symetricPrefix } from "../dict/allReferWords";
 import { concatWordSeparater } from "../dict/concatWordSeparater";
 import {
   allFigBetweenMatch,
-  figWithCommaBetween,
-  figWithThisCommaBetween,
-  figWithRangeBetween,
-  figWithThisRangeBetween,
+  // figWithCommaBetween,
+  // figWithThisCommaBetween,
+  // figWithRangeBetween,
+  // figWithThisRangeBetween,
 } from "../dict/figReg";
 import { allKeyBetweenMatch, allSymbolChar } from "../dict/keyRegs";
 import { getKeyInRange } from "./otherUtils";
@@ -59,6 +59,17 @@ export const findMatches = (
   // if (allFigBetweenMatch(paragraph).length > 0) {
   //   console.log(allFigBetweenMatch(paragraph));
   //   console.log(allMatchesFromFig);
+
+  //   const allCommaMatch = [
+  //     ...paragraph.matchAll(figWithCommaBetween),
+  //     ...paragraph.matchAll(figWithThisCommaBetween),
+  //   ];
+  //   const allRangeMatch = [
+  //     ...paragraph.matchAll(figWithRangeBetween),
+  //     ...paragraph.matchAll(figWithThisRangeBetween),
+  //   ];
+  //   console.log("allCommaMatch: ", allCommaMatch);
+  //   console.log("allRangeMatch: ", allRangeMatch);
   //   debugger;
   // }
 
@@ -999,9 +1010,10 @@ export const findMatches = (
 
   matches = matches.reduce((acc, cur) => {
     if (acc.find((m) => m.index === cur.index)) {
-      return [...acc];
+      return acc;
     }
-    return [...acc, cur];
+    acc.push(cur);
+    return acc;
   }, []);
 
   //Test
