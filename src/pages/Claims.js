@@ -15,12 +15,12 @@ const Claims = ({ handleReInit }) => {
   );
   const {
     allUpdateClaimParagraph: allUpdateParagraph,
-    setAllUpdateClaimParagraph: setAllUpdateParagraph
+    setAllUpdateClaimParagraph: setAllUpdateParagraph,
   } = useContext(UpdateParagraphContextProvider);
   const [isOnAdding, setIsOnAdding] = useState(false);
   const [AddingZoneValue, setAddingZoneValue] = useState({
     claimNum: "",
-    content: ""
+    content: "",
   });
   const [isSearchPopupOpen, toggleIsSearchPopupOpen] = useState(false);
   // const [searchString, setSearchString] = useState("");
@@ -36,7 +36,7 @@ const Claims = ({ handleReInit }) => {
           return { ...claim, isCollapse: !claim.isCollapse };
         }
         return claim;
-      })
+      }),
     }));
   };
 
@@ -45,8 +45,8 @@ const Claims = ({ handleReInit }) => {
       ...prev,
       allClaimsDetails: essentialData.allClaimsDetails.map((claim) => ({
         ...claim,
-        isCollapse: method === "collapse" ? true : false
-      }))
+        isCollapse: method === "collapse" ? true : false,
+      })),
     }));
     setAllUpdateParagraph((prev) =>
       prev.map((p) => {
@@ -66,7 +66,7 @@ const Claims = ({ handleReInit }) => {
             ...p,
             content: newContent,
             claimNum: newClaimNum,
-            matches: null
+            matches: null,
           };
         }
         return p;
@@ -82,7 +82,7 @@ const Claims = ({ handleReInit }) => {
             ...p,
             content: null,
             claimNum: null,
-            matches: null
+            matches: null,
           };
         }
         return p;
@@ -113,7 +113,7 @@ const Claims = ({ handleReInit }) => {
             ...p,
             claimNum: payload.claimNum,
             content: payload.content,
-            matches: null
+            matches: null,
           };
         }
         return p;
@@ -143,7 +143,7 @@ const Claims = ({ handleReInit }) => {
             ...p,
             content: null,
             claimNum: null,
-            matches: newMatches
+            matches: newMatches,
           };
         }
         return p;
@@ -157,7 +157,7 @@ const Claims = ({ handleReInit }) => {
         if (p.addedIdx === addedIdx) {
           return {
             ...p,
-            isCollapse: !p.isCollapse
+            isCollapse: !p.isCollapse,
           };
         }
         return p;
@@ -165,7 +165,7 @@ const Claims = ({ handleReInit }) => {
     );
   };
 
-  const handleSaveAll = async() => {
+  const handleSaveAll = async () => {
     if (!checkIfNumOK()) {
       window.alert(`請求項的編號有跳號，請檢查後再按確認。`);
       return;
@@ -174,13 +174,13 @@ const Claims = ({ handleReInit }) => {
     // debugger;
     await handleReInit(essentialData, setEssentialData, {
       method: "allClaimsDetails",
-      data: allUpdateParagraph
+      data: allUpdateParagraph,
     });
     setAllUpdateParagraph((prev) =>
       prev.map(() => ({
         claimNum: null,
         content: null,
-        matches: null
+        matches: null,
       }))
     );
   };
@@ -199,7 +199,7 @@ const Claims = ({ handleReInit }) => {
         essentialData.allClaimsDetails.map((_, idx) => ({
           claimNum: null,
           content: null,
-          matches: null
+          matches: null,
         }))
       );
       setAddingZoneValue({ claimNum: "", content: "" });
@@ -255,7 +255,7 @@ const Claims = ({ handleReInit }) => {
                         textAlign: "start",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
-                        whiteSpace: "nowrap"
+                        whiteSpace: "nowrap",
                       }}
                     >
                       {searchString}
@@ -279,7 +279,7 @@ const Claims = ({ handleReInit }) => {
                     if (!isOnAdding) {
                       setAddingZoneValue((prev) => ({
                         ...prev,
-                        claimNum: (allUpdateParagraph.length + 1).toString()
+                        claimNum: (allUpdateParagraph.length + 1).toString(),
                       }));
                     }
                     setIsOnAdding((prev) => !prev);
@@ -303,7 +303,7 @@ const Claims = ({ handleReInit }) => {
                             .map(() => ({
                               claimNum: null,
                               content: null,
-                              matches: null
+                              matches: null,
                             }))
                         );
                       }}
@@ -353,7 +353,7 @@ const Claims = ({ handleReInit }) => {
                     onChange={(e) =>
                       setAddingZoneValue((prev) => ({
                         ...prev,
-                        claimNum: e.target.value
+                        claimNum: e.target.value,
                       }))
                     }
                     type="text"
@@ -401,8 +401,8 @@ const Claims = ({ handleReInit }) => {
                               claimNum: AddingZoneValue.claimNum,
                               content: AddingZoneValue.content,
                               isNewAdded: true,
-                              isCollapse: false
-                            }
+                              isCollapse: false,
+                            },
                           ]);
                           setAddingZoneValue({ claimNum: "", content: "" });
                           setIsOnAdding(false);

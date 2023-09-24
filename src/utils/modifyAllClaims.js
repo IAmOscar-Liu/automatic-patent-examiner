@@ -49,11 +49,57 @@ export const modifyAllClaims = async (
           claims[index].matches = newMatches;
         } else {
           // 有要 update 的 match 而且有 preserveValue 的 match
-          // 把 hasBeenModified = true 的保留，其他重新找
+          // 把 hasBeenModified = true 而且沒有 preserveValue 的保留，其他重新找
           claims[index].matches = null;
-          claims[index].hasBeenModifiedMatches = newMatches
-            .filter((nM) => nM.hasBeenModified)
-            .filter((nM) => !nM.preserveValue);
+          claims[index].hasBeenModifiedMatches = newMatches.filter(
+            (nM) => nM.hasBeenModified && !nM.preserveValue
+          );
+
+          if (manuallyAddValues && manuallyAddValues.length > 0) {
+            const newModifiedMatches = newMatches
+              .filter((nM) => !nM.hasBeenModified || nM.preserveValue)
+              .filter((nM) => {
+                if (manuallyAddValues.find((v) => nM.value.includes(v)))
+                  return true;
+                return false;
+              })
+              .map((nM) => {
+                const newValue = [
+                  ...manuallyAddValues.sort((a, b) => b.length - a.length),
+                ].find((v) => nM.value.includes(v));
+                const newStart = nM.start + nM.value.indexOf(newValue);
+
+                return {
+                  ...nM,
+                  isInDescriptionOfElementMap: true,
+                  pathIsOK:
+                    claims[index].type === "independent" &&
+                    nM.indexOfMatch === 0
+                      ? true
+                      : false,
+                  preserveValue: false,
+                  hasBeenModified: true,
+                  isOK: true,
+                  prevMatchedElement: null,
+                  start: newStart,
+                  end: newStart + newValue.length,
+                  value: newValue,
+                  fullValue: null,
+                  item: newValue,
+                  group: stringToUnicode(newValue),
+                  keyEnd: nM.hasOuterKey ? nM.keyEnd : null,
+                  keyStart: nM.hasOuterKey ? nM.keyStart : null,
+                  keys: nM.hasOuterKey ? nM.keys : null,
+                };
+              });
+            // console.log(newModifiedMatches);
+            // debugger
+            claims[index].hasBeenModifiedMatches = [
+              ...claims[index].hasBeenModifiedMatches,
+              ...newModifiedMatches,
+            ].sort((a, b) => a.start - b.start);
+          }
+
           // console.log(claims[index].hasBeenModifiedMatches);
           // debugger;
         }

@@ -70,6 +70,11 @@ const Readme = () => {
         <h1>使用指南</h1>
       </section>
       <section className="readme-content">
+        {process.env.REACT_APP_SYSTEM_TYPE === "tipo" ? null : (
+          <p style={{ color: "red" }}>
+            【注意事項】本系統僅為輔助性質，不提供任何建議事項，實際申請案件內容仍需申請人(代理人)進行驗證
+          </p>
+        )}
         <p>
           【軟體名稱】{" "}
           {process.env.REACT_APP_SYSTEM_TYPE === "tipo"
@@ -151,7 +156,7 @@ const Readme = () => {
             ))}
         </div>
         <p>【軟體開發人員】 專利一組四科 助理審查官 劉克群</p>
-        <p>【諮詢電話】 簡先生 02-23767276  林科長 02-23767254</p>
+        <p>【諮詢電話】 簡先生 02-23767276 林科長 02-23767254</p>
       </section>
     </>
   );

@@ -25,10 +25,14 @@ function xmlbuilder({
   const root =
     patentType === "發明"
       ? create({ version: "1.0" }).ele("invention-specification", {
-          "application-num": `${new Date().getFullYear() - 1911 + ""}1XXXXX`,
+          "application-num": `${
+            new Date().getFullYear() - 1911 + ""
+          }1XXXXX@${+new Date()}`,
         })
       : create({ version: "1.0" }).ele("utility-model-specification", {
-          "application-num": `${new Date().getFullYear() - 1911 + ""}2XXXXX`,
+          "application-num": `${
+            new Date().getFullYear() - 1911 + ""
+          }2XXXXX@${+new Date()}`,
         });
 
   // 中文摘要

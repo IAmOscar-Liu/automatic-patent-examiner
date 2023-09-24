@@ -35,7 +35,7 @@ const HistoryPopup = ({ handleClose }) => {
       const prevDateArr = [
         prevDate.getFullYear(),
         prevDate.getMonth(),
-        prevDate.getDate()
+        prevDate.getDate(),
       ];
 
       let display;
@@ -182,7 +182,9 @@ const HistoryPopup = ({ handleClose }) => {
           <ul>
             <li>
               <p>日期</p>
-              <p>案號</p>
+              <p>
+                {process.env.REACT_APP_SYSTEM_TYPE === "tipo" ? "案號" : ""}
+              </p>
               <p>案件名稱</p>
             </li>
             {filteredHistoryArr
@@ -190,7 +192,9 @@ const HistoryPopup = ({ handleClose }) => {
               .map(({ appId, appTitle, savedDate }, liIdx) => (
                 <li key={liIdx}>
                   <p>{formatDate(savedDate)}</p>
-                  <p>{appId}</p>
+                  <p>
+                    {process.env.REACT_APP_SYSTEM_TYPE === "tipo" ? appId : ""}
+                  </p>
                   <p>{appTitle}</p>
                 </li>
               ))}
@@ -227,7 +231,7 @@ const HistoryPopup = ({ handleClose }) => {
           <button
             onClick={() => goToPage({ direction: "prev" })}
             style={{
-              pointerEvents: currentPage === 1 ? "none" : "auto"
+              pointerEvents: currentPage === 1 ? "none" : "auto",
             }}
             disabled={currentPage === 1}
           >
@@ -237,7 +241,7 @@ const HistoryPopup = ({ handleClose }) => {
             onClick={() => goToPage({ direction: "next" })}
             style={{
               pointerEvents: currentPage === totalPages ? "none" : "auto",
-              marginLeft: 5
+              marginLeft: 5,
             }}
             disabled={currentPage === totalPages}
           >
