@@ -1,3 +1,0 @@
-/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */
-
-//!/(前述之|所述之|上述之|係用以|係用來|係用於|若干個|若干種|複數個|複數種|多數個|多數種|若干|一個|一種|二個|二種|複數|前述|所述|上述|其中|多個|多種|多數|具有|包含|包括|多|二|一|個|種|些|和|及|與|或|之|的|係|該|@|、|，|、|，|-|；|:|,|\\|\?|\.|\+|\[|\]|\(|\)|{|}|「|」)/.test(
