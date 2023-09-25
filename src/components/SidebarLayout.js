@@ -42,7 +42,7 @@ const SidebarLayout = ({ children }) => {
           元件名稱與符號
           {XMLData.applicationNum && essentialData.utilityModelTitle && (
             <p>
-              {!XMLData.applicationNum.endsWith("X") && (
+              {!XMLData.applicationNum.includes("XXXX") && (
                 <span>
                   {XMLData.applicationNum[3] === "1" ? "發明" : "新型"}案號：
                   <i>{XMLData.applicationNum}</i>
