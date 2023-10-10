@@ -7,7 +7,8 @@ function getTitle(root) {
     // titleElement?.innerText.trim().replace(/【.*新\s*型\s*名\s*稱】/, "") ?? "";
     titleElement?.innerText
       .trim()
-      .replace(/【.*(新|發)\s*(型|明)\s*名\s*稱】/, "") ?? "";
+      .replace(/【.*(新|發)\s*(型|明)\s*名\s*稱】/, "")
+      .trim() ?? "";
   const patentType = titleElement?.innerText
     .trim()
     .match(/【.*發\s*明\s*名\s*稱】/, "")
@@ -27,7 +28,8 @@ function getTitle(root) {
     titleEn =
       titleElement.nextElementSibling.innerText
         .trim()
-        .replace(/【英\s*文\s*(新|發)\s*(型|明)\s*名\s*稱】/, "") ?? "";
+        .replace(/【英\s*文\s*(新|發)\s*(型|明)\s*名\s*稱】/, "")
+        .trim() ?? "";
     console.log(`【英文${patentType}名稱】`, titleEn);
   }
   return { patentType, title, titleEn, titleElement };
